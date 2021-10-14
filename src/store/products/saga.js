@@ -44,7 +44,7 @@ function* fetchProductProfile() {
 function* onUpdateProduct({ payload: product }) {
   try {
     yield call(updateProduct, product)
-    console.log('aaaaaaaaaaa')
+    console.log(product)
     yield put(updateProductSuccess(product))
   } catch (error) {
     yield put(updateProductFail(error))
@@ -65,6 +65,7 @@ function* onAddNewProduct({ payload: product }) {
   try {
     const response = yield call(addNewProduct, product)
     yield put(addProductSuccess(Object.assign({}, product, response)))
+    yield put(addProductFail(null))
   } catch (error) {
 
     yield put(addProductFail(error))

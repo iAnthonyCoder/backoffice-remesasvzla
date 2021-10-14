@@ -29,6 +29,7 @@ export async function post(url, data, config = {}) {
 }
 
 export async function put(url, data, config = {}) {
+  console.log(data)
   return axiosApi
     .put(url, { ...data }, { ...config })
     .then(response => response.data)

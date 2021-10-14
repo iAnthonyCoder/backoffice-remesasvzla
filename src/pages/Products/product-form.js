@@ -1,3 +1,4 @@
+import React from 'react'
 import { SingleSelect } from 'components/Common/SingleSelect';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { getCurrencies } from 'helpers/fakebackend_helper';
@@ -8,12 +9,16 @@ import * as Yup from 'yup';
 
 function ProductForm(props) {
 
-    const initialValues = {
+    const [initialValues, setInitialValues] = React.useState({
         name: '',
 		rate: 0,
 		currency_to_receive: '',
 		currency_to_deliver: '',
-    };
+    });
+
+    React.useEffect(() => {
+        setInitialValues(props.productToEdit)
+    }, [props.productToEdit])
 
     
 
@@ -47,7 +52,7 @@ function ProductForm(props) {
 
     return (
 
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+        <Formik initialValues={initialValues} validationSchema={validationSchema} enableReinitialize={true} onSubmit={onSubmit}>
         {({ errors, touched, isSubmitting, setFieldTouched, handleChange, setFieldValue, values }) => (
             <Form className="signup-form">
                 <div className='col-12'>
@@ -111,9 +116,11 @@ function ProductForm(props) {
                     </div>
                 </div> */}
                 <div className='d-flex justify-content-end pt-4'>
-                    <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                        {isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                        ADD PRODUCT
+                    <button type="submit" disabled={props.actionsLoading} className="btn btn-primary">
+                        {props.actionsLoading && <span className="spinner-border spinner-border-sm mr-1"></span>}
+                        {
+                            props.isEdit ? 'UPDATE PRODUCT' : 'ADD PRODUCT'
+                        }
                     </button>
                 </div>
             </Form>

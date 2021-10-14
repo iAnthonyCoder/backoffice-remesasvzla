@@ -219,7 +219,17 @@ export const deleteUser = user =>
 
 
 // get contacts
-export const getProducts = (query='') => get('/products'+query)
+
+
+export const getProducts = (props) => {
+  let urlToFetch = url.PRODUCTS
+
+  if(props && props.query){
+    urlToFetch = urlToFetch + query
+  }
+  console.log(urlToFetch)
+  return get(urlToFetch)
+}
 
 export const getProductProfile = () => get(url.PRODUCTS)
 
@@ -227,7 +237,7 @@ export const getProductProfile = () => get(url.PRODUCTS)
 export const addNewProduct = product => post(url.PRODUCTS, product)
 
 // update user
-export const updateProduct = product => console.log('aaaaaaaaaaaaaaaaaaawwwaw')
+export const updateProduct = product => put(url.PRODUCTS+'/'+product._id, product)
 
 // delete user
 export const deleteProduct = product =>

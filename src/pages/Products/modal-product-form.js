@@ -20,10 +20,16 @@ const ModalProductForm = (props) => {
                     {!!props.isEdit ? "Edit Product" : "Add Product"}
                 </ModalHeader>
                 <ModalBody>
+                {(!_.isEmpty(props.error) && props.showError) ? (
+                                                                                            <Alert color="danger">{props.error.response.data.message}</Alert>
+                                                                                        ) : null}
                     <ProductForm 
                         handleValidProductSubmit={props.handleValidProductSubmit}
                         isEdit={props.isEdit}
-                        productForEdit={props.productsForEdit}
+                        productToEdit={props.productToEdit}
+                        actionsLoading={props.actionsLoading}
+                        setActionsLoading={props.setActionsLoading}
+                     
                     />
 
                     {/* <AvForm

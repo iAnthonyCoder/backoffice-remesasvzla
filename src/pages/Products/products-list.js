@@ -187,12 +187,14 @@ const ProductsList = props => {
 
 
     const handleValidProductSubmit = (e, values) => {
+
+      
         setActionsLoading(true)
         setShowError(true)
         const { onAddNewProduct, onUpdateProduct } = props
         if (isEdit) {
             const updateProduct = {
-                _id: productList._id,
+                _id: values._id,
                 name: values.name,
                 currency_to_receive: values.currency_to_receive,
                 currency_to_deliver: values.currency_to_deliver,
@@ -212,10 +214,14 @@ const ProductsList = props => {
     }
 
     useEffect(() => {
-        if(modal){
+
+        console.log('/////////')
+        console.log(props.error)
+        if(openFormModal){
             if(_.isEmpty(props.error)){
-                setModal(false)
+                setOpenFormModal(false)
                 setIsEdit(false)
+                setProductToEdit({})
                 showNotification({title:'Saved!', message:'Item is saved', type:'success'})
             }
         }
@@ -225,13 +231,15 @@ const ProductsList = props => {
                 showNotification({title:'Deleted!', message:'Item is gone', type:'success'})
             }
         }
+        console.log('-----------+++')
         setActionsLoading(false)
     }, [products, props.error])
 
     const handleProductClicks = () => {
         setOpenFormModal(true)
         setIsEdit(false)
-        // setShowError(false)
+        setProductToEdit({})
+        setShowError(false)
         // setProductList('')
         // setIsEdit(false)
         // toggle()
@@ -262,6 +270,7 @@ const ProductsList = props => {
 
     return (
         <React.Fragment>
+     
             <DeleteDialog 
                 deleteModalIsOpen={deleteModalIsOpen}
                 setDeleteModalIsOpen={setDeleteModalIsOpen}
@@ -277,6 +286,10 @@ const ProductsList = props => {
                 handleValidProductSubmit={handleValidProductSubmit}
                 productToEdit={productToEdit}
                 isEdit={isEdit}
+                error={props.error}
+                showError={showError}
+                actionsLoading={actionsLoading}
+                setActionsLoading={setActionsLoading}
             />
             <div className="page-content">
                 <MetaTags>
