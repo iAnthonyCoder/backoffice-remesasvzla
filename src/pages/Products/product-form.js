@@ -79,7 +79,7 @@ function ProductForm(props) {
 							endPoint={getCurrencies}
 							touched={touched.currency_to_receive}
 							name={"currency_to_receive"}
-							title={"Currency"}
+							title={"Currency To Receive"}
 							extraFilter={false}
                             extraQuery={false}
 						/>
@@ -95,7 +95,7 @@ function ProductForm(props) {
 							endPoint={getCurrencies}
 							touched={touched.currency_to_deliver}
 							name={"currency_to_deliver"}
-							title={"Currency"}
+							title={"Currency To Deliver"}
 							extraFilter={false}
                             extraQuery={false}
 						/>
