@@ -10,10 +10,9 @@ import * as Yup from 'yup';
 function ProductForm(props) {
 
     const [initialValues, setInitialValues] = React.useState({
-        name: '',
-		rate: 0,
 		currency_to_receive: '',
 		currency_to_deliver: '',
+        cash_deliver: false
     });
 
     React.useEffect(() => {
@@ -24,22 +23,14 @@ function ProductForm(props) {
 
     const validationSchema = Yup.object().shape({
 
-        name: Yup.string()
-            .min(5, "Minimum 5 symbols")
- 			.max(50, "Maximum 50 symbols")
-            .required('Person name is required'),
-
-        rate: Yup.number()
-            .min(0.000000000000001, "Minimum 0.000000000000001")
- 			.max(10000000000000000000000, "Maximum 10000000000000000000000")
-            .required('Phone is required'),
-
         currency_to_receive: Yup.object()
 
             .required('currency_to_receive is required'),
 
         currency_to_deliver: Yup.object()
             .required('currency_to_receive is required'),
+
+        cash_deliver: Yup.boolean()
     
     });
 
@@ -55,20 +46,6 @@ function ProductForm(props) {
         <Formik initialValues={initialValues} validationSchema={validationSchema} enableReinitialize={true} onSubmit={onSubmit}>
         {({ errors, touched, isSubmitting, setFieldTouched, handleChange, setFieldValue, values }) => (
             <Form className="signup-form">
-                <div className='col-12'>
-                    <div className="form-group">
-                        <label className="form-label">Name</label>
-                        <Field name="name" type="text" placeholder="Enter name" className={'form-control' + (errors.name && touched.name ? ' is-invalid' : '')} />
-                        <ErrorMessage name="name" component="div" className="invalid-feedback" />
-                    </div>
-                </div>
-                <div className='col-12 mt-3'>
-                    <div className="form-group">
-                        <label className="form-label">Rate</label>
-                        <Field name="rate" type="number" placeholder="Enter rate" className={'form-control' + (errors.rate && touched.rate ? ' is-invalid' : '')} />
-                        <ErrorMessage name="rate" component="div" className="invalid-feedback" />
-                    </div>
-                </div>
                 <div className='col-12 mt-3'>
                     <div className="form-group">
 						<SingleSelect
@@ -99,6 +76,15 @@ function ProductForm(props) {
 							extraFilter={false}
                             extraQuery={false}
 						/>
+                    </div>
+                </div>
+                <div className='col-12 mt-3'>
+                    <div className="form-group d-flex align-items-center">
+
+                        <Field type="checkbox" name="cash_deliver" id='cash_deliver' />&nbsp;
+                        <label className="form-label ml-2 mb-0" for="cash_deliver"> Cash Deliver (EFE)</label>
+                        
+                        <ErrorMessage name="cash_deliver" component="div" className="invalid-feedback" />
                     </div>
                 </div>
                 {/* <div className='col-12 mt-3'>

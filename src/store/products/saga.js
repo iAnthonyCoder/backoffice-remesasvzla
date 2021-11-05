@@ -44,7 +44,6 @@ function* fetchProductProfile() {
 function* onUpdateProduct({ payload: product }) {
   try {
     yield call(updateProduct, product)
-    console.log(product)
     yield put(updateProductSuccess(product))
   } catch (error) {
     yield put(updateProductFail(error))

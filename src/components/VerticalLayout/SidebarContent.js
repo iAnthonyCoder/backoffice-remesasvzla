@@ -6,7 +6,7 @@ import SimpleBar from "simplebar-react"
 
 // MetisMenu
 import MetisMenu from "metismenujs"
-import { withRouter } from "react-router-dom"
+import { withRouter, useHistory } from "react-router-dom"
 import { Link } from "react-router-dom"
 
 //i18n
@@ -14,6 +14,7 @@ import { withTranslation } from "react-i18next"
 
 const SidebarContent = props => {
   const ref = useRef()
+  const history = useHistory()
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
     const pathName = props.location.pathname
@@ -100,18 +101,18 @@ const SidebarContent = props => {
               </Link>
             </li>
             
-            <li className="menu-title">{props.t("Apps")}</li>
+            <li className="menu-title">{props.t("Modules")}</li>
 
             <li>
               <Link to="/currencies" className=" ">
-                <i className="bx bx-user"></i>
+                <i className="bx bx-money"></i>
                 <span>Currencies</span>
               </Link>
             </li>
 
             <li>
               <Link to="/products" className="">
-                <i className="bx bx-chat"></i>
+                <i className="bx bxs-package"></i>
                 <span>Products</span>
               </Link>
             </li>
@@ -130,7 +131,12 @@ const SidebarContent = props => {
               </Link>
             </li> */}
           </ul>
+          
         </div>
+        {/* <hr/> */}
+        
+        
+       
       </SimpleBar>
     </React.Fragment>
   )

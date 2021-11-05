@@ -26,7 +26,7 @@ import slack from "../../assets/images/brands/slack.png"
 
 //i18n
 import { withTranslation } from "react-i18next"
-
+import { useHistory } from "react-router-dom"
 // Redux Store
 import {
   showRightSidebarAction,
@@ -35,6 +35,7 @@ import {
 } from "../../store/actions"
 
 const Header = props => {
+  const history = useHistory()
   const [search, setsearch] = useState(false)
   const [megaMenu, setmegaMenu] = useState(false)
   const [socialDrp, setsocialDrp] = useState(false)
@@ -168,6 +169,11 @@ const Header = props => {
             </div> */}
 
             {/* <NotificationDropdown /> */}
+            <div className='d-flex align-items-center mr-2 ml-2'>
+          <button className='btn btn-primary w-100'
+            onClick={()=>history.push('#ADD_RATE')}
+          >Update Rates</button>
+        </div>
             <ProfileMenu />
 
             {/* <div

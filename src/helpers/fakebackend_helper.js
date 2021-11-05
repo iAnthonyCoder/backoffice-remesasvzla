@@ -2,6 +2,7 @@ import axios from "axios"
 import { del, get, post, put } from "./api_helper"
 import * as url from "./url_helper"
 
+import queryString from "query-string"
 // Gets the logged in user data from local session
 const getLoggedInUser = () => {
   const user = localStorage.getItem("user")
@@ -231,13 +232,27 @@ export const getProducts = (props) => {
   return get(urlToFetch)
 }
 
+export const getHistory = (query) => {
+  let urlToFetch = '/refreshes'
+
+  if(query){
+    urlToFetch = urlToFetch + query
+  }
+
+  return get(urlToFetch)
+}
+
 export const getProductProfile = () => get(url.PRODUCTS)
 
 // add user
 export const addNewProduct = product => post(url.PRODUCTS, product)
 
 // update user
-export const updateProduct = product => put(url.PRODUCTS+'/'+product._id, product)
+export const updateProduct = product => {
+  let id = product._id
+  delete product._id
+  put(url.PRODUCTS+'/'+id, product)
+}
 
 // delete user
 export const deleteProduct = product =>
@@ -265,7 +280,16 @@ export const getCurrencyProfile = () => get(url.CURRENCIES)
 export const addNewCurrency = currency => post(url.CURRENCIES, currency)
 
 // update user
-export const updateCurrency = currency => put(url.CURRENCIES+'/'+currency._id, currency)
+export const updateCurrency = currency => {
+  let id = currency._id
+  delete currency._id
+  put(url.CURRENCIES+'/'+id, currency)
+}
+
+export const getSheetData = (date) => 
+  get(url.REFRESHES+'/sheet?'+queryString.stringify(date), )
+
+
 
 // delete user
 export const deleteCurrency = currency =>
@@ -291,6 +315,8 @@ export const deleteProject= project =>
 export const getUserProfile = () => get(url.GET_USER_PROFILE)
 
 export const getProduct = () => get(url.PRODUCT)
+
+export const bulkUpdateProducts = (data) => post('/refreshes', data)
 
 // get inboxmail
 export const getInboxMails = () => get(url.GET_INBOX_MAILS)

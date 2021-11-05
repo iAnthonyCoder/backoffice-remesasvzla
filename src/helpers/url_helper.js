@@ -100,3 +100,5 @@ export const PRODUCT = "/product"
 
 export const CURRENCIES = "/currencies"
 export const CURRENCY = "/currency"
+
+export const REFRESHES = "/refreshes"

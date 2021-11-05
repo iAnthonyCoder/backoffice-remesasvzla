@@ -12,9 +12,7 @@ paginationFactory, {
 import { AvForm, AvField } from "availity-reactstrap-validation"
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit"
 import BootstrapTable from "react-bootstrap-table-next"
-import {
-    getRoles
-} from "../../helpers/fakebackend_helper"
+
 import showNotification from '../../components/Common/Notifications'
 import Breadcrumbs from "components/Common/Breadcrumb"
 
@@ -33,7 +31,6 @@ const CurrenciesList = props => {
     const [modal, setModal] = useState(false);
     const [showError, setShowError] = useState(false);
     const [isEdit, setIsEdit] = useState(false)
-    const [roles, setRoles] = useState([]);
     const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
     const [scopedItem, setScopedItem] = useState({})
     const [actionsLoading, setActionsLoading] = useState(false)
@@ -178,7 +175,7 @@ const CurrenciesList = props => {
         toggleDeleteModal()
         setScopedItem({
             _id: currency._id,
-            name: currency.username
+            name: currency.name
         })
     }
 
@@ -240,18 +237,6 @@ const CurrenciesList = props => {
         toggle()
     }
 
-    const rolesList = async () => {
-        try{
-            let response = await getRoles()
-            setRoles(response)
-        } catch(er) {
-            console.log(er)
-        }
-    }
-
-    useEffect(() => {
-        rolesList()
-    }, [])
 
     function toggleDeleteModal() {
         setDeleteModalIsOpen(!deleteModalIsOpen)
@@ -303,15 +288,7 @@ const CurrenciesList = props => {
                                                 {toolkitProps => (
                                                     <React.Fragment>
                                                         <Row className="mb-2">
-                                                            <Col sm="4">
-                                                                <div className="search-box ms-2 mb-2 d-inline-block">
-                                                                    <div className="position-relative">
-                                                                        <SearchBar {...toolkitProps.searchProps} />
-                                                                        <i className="bx bx-search-alt search-icon" />
-                                                                    </div>
-                                                                </div>
-                                                            </Col>
-                                                            <Col sm="8">
+                                                            <Col sm="12">
                                                                 <div className="text-sm-end">
                                                                     <Button
                                                                         color="primary"
@@ -330,7 +307,6 @@ const CurrenciesList = props => {
                                                                     <BootstrapTable
                                                                         {...toolkitProps.baseProps}
                                                                         {...paginationTableProps}
-                                                                        selectRow={selectRow}
                                                                         defaultSorted={defaultSorted}
                                                                         classes={
                                                                             "table align-middle table-nowrap table-hover"

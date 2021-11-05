@@ -12,9 +12,7 @@ paginationFactory, {
 import { AvForm, AvField } from "availity-reactstrap-validation"
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit"
 import BootstrapTable from "react-bootstrap-table-next"
-import {
-    getRoles
-} from "../../helpers/fakebackend_helper"
+
 import showNotification from '../../components/Common/Notifications'
 import Breadcrumbs from "components/Common/Breadcrumb"
 
@@ -35,7 +33,7 @@ const ProductsList = props => {
     const [modal, setModal] = useState(false);
     const [showError, setShowError] = useState(false);
     const [isEdit, setIsEdit] = useState(false)
-    const [roles, setRoles] = useState([]);
+
     const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
     const [scopedItem, setScopedItem] = useState({})
     const [actionsLoading, setActionsLoading] = useState(false)
@@ -48,11 +46,11 @@ const ProductsList = props => {
     }
 
     const pageOptions = {
-        sizePerPage: 20,
+        sizePerPage: 50,
         totalSize: props.totalSize, // replace later with size(products),
         onPageChange: onPageChange,
         custom: true,
-        page: Math.ceil(props.from/20)
+        page: Math.ceil(props.from/50)
     }
  
 
@@ -78,23 +76,18 @@ const ProductsList = props => {
             ),
         },
         {
-            text: "Name",
-            dataField: "name",
-            sort: true
-        },
-        {
-            text: "rate",
-            dataField: "rate",
-            sort: true,
-        },
-        {
             dataField: "currency_to_receive.iso_code",
-            text: "currency_to_receive",
+            text: "Currency To Receive",
             sort: true,
         },
         {
             dataField: "currency_to_deliver.iso_code",
-            text: "currency_to_deliver",
+            text: "Currency To Deliver",
+            sort: true,
+        },
+        {
+            dataField: "cash_deliver",
+            text: "Cash deliver",
             sort: true,
         },
         // {
@@ -175,7 +168,7 @@ const ProductsList = props => {
         toggleDeleteModal()
         setScopedItem({
             _id: product._id,
-            name: product.username
+            name: product.name
         })
     }
 
@@ -195,19 +188,17 @@ const ProductsList = props => {
         if (isEdit) {
             const updateProduct = {
                 _id: values._id,
-                name: values.name,
                 currency_to_receive: values.currency_to_receive,
                 currency_to_deliver: values.currency_to_deliver,
-                rate: values.rate,
+                cash_deliver: values.cash_deliver,
             }
             onUpdateProduct(updateProduct)
             setProductList(updateProduct)
         } else {
             const newProduct = {
-                name: values["name"],
                 currency_to_receive: values["currency_to_receive"],
                 currency_to_deliver: values["currency_to_deliver"],
-                rate: values["rate"],
+                cash_deliver: values["cash_deliver"]
             }
             onAddNewProduct(newProduct)
         }
@@ -245,19 +236,9 @@ const ProductsList = props => {
         // toggle()
     }
 
-    const rolesList = async () => {
-        try{
-            let response = await getRoles()
-            setRoles(response)
-        } catch(er) {
-            console.log(er)
-        }
-    }
+  
 
-    useEffect(() => {
-        console.log('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP')
-        rolesList()
-    }, [])
+ 
 
     function toggleDeleteModal() {
         setDeleteModalIsOpen(!deleteModalIsOpen)
@@ -319,15 +300,7 @@ const ProductsList = props => {
                                                 {toolkitProps => (
                                                     <React.Fragment>
                                                         <Row className="mb-2">
-                                                            <Col sm="4">
-                                                                <div className="search-box ms-2 mb-2 d-inline-block">
-                                                                    <div className="position-relative">
-                                                                        <SearchBar {...toolkitProps.searchProps} />
-                                                                        <i className="bx bx-search-alt search-icon" />
-                                                                    </div>
-                                                                </div>
-                                                            </Col>
-                                                            <Col sm="8">
+                                                            <Col sm="12">
                                                                 <div className="text-sm-end">
                                                                     <Button
                                                                         color="primary"
@@ -346,7 +319,6 @@ const ProductsList = props => {
                                                                     <BootstrapTable
                                                                         {...toolkitProps.baseProps}
                                                                         {...paginationTableProps}
-                                                                        selectRow={selectRow}
                                                                         defaultSorted={defaultSorted}
                                                                         classes={
                                                                             "table align-middle table-nowrap table-hover"
@@ -359,8 +331,6 @@ const ProductsList = props => {
                                                                         striped={false}
                                                                         responsive
                                                                     />
-
-                                                                        
                                                                 </div>
                                                             </Col>
                                                         </Row>
