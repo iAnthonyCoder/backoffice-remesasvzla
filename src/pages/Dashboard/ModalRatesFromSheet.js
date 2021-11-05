@@ -27,6 +27,7 @@ const ModalRatesForm = (props) => {
         try {
 
             let query = Object.assign({}, formData)
+            console.log(query)
             if(query.day < 10){
                 query.day = '0'+query.day
             }
@@ -80,7 +81,7 @@ const ModalRatesForm = (props) => {
     }, [dataFromSheet])
 
     const [ formData, setFormData ] = React.useState({
-        day: moment().format("DD"),
+        day: moment().format("D"),
         month: moment().format("MM"),
         year: moment().format("YYYY"),
     })
