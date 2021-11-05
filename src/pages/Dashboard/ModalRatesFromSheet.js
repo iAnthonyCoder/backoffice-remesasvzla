@@ -34,7 +34,6 @@ const ModalRatesForm = (props) => {
                 query.month = '0'+query.month-1
             }
             console.log(query)
-            query.month = '10'
             let res = await getSheetData(query)
             
             setDataFromSheet(res)
