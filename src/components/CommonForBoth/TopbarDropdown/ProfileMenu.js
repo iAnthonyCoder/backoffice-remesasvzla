@@ -11,7 +11,7 @@ import {
 import { withTranslation } from "react-i18next"
 // Redux
 import { connect } from "react-redux"
-import { withRouter, Link } from "react-router-dom"
+import { withRouter, Link, useHistory } from "react-router-dom"
 
 // users
 import user1 from "../../../assets/images/users/avatar-1.jpg"
@@ -19,6 +19,8 @@ import user1 from "../../../assets/images/users/avatar-1.jpg"
 const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false)
+
+  const history  = useHistory()
 
   const [username, setusername] = useState("Admin")
 
@@ -77,10 +79,27 @@ const ProfileMenu = props => {
             {props.t("Lock screen")}
           </DropdownItem> */}
           {/* <div className="dropdown-divider"/> */}
+          <a className='dropdown-item'
+            onClick={()=>{
+              history.push('#UPDATE_OWN_EMAIL')
+              setMenu(!menu)
+            }}
+          >
+            <i className="bx bx-envelope font-size-16 align-middle me-1"/>
+            Update Email</a>
+            <a className='dropdown-item'
+            onClick={()=>{
+              history.push('#UPDATE_OWN_PASSWORD')
+              setMenu(!menu)
+            }}
+          >
+            <i className="bx bx-shield font-size-16 align-middle me-1"/>
+            Update Password</a>
           <Link to="/logout" className="dropdown-item">
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger"/>
             <span>{props.t("Logout")}</span>
           </Link>
+          
         </DropdownMenu>
       </Dropdown>
     </React.Fragment>

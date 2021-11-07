@@ -1,5 +1,4 @@
 import { Card, CardBody, Col, Container, Row, Modal, Button, ModalHeader, ModalBody, Alert } from "reactstrap"
-import { Formik, Field, Form, ErrorMessage } from 'formik';
 import moment from 'moment';
 import { bulkUpdateProducts, getProduct, getSheetData } from "helpers/fakebackend_helper";
 import React from 'react'
@@ -14,9 +13,22 @@ import {
   } from "reactstrap"
   import classnames from "classnames"
   import BootstrapTable from 'react-bootstrap-table-next';
-import { submit } from "redux-form";
+import Swal from "sweetalert2";
+import showNotifications from "components/Common/Notifications";
 
-const ModalRatesForm = (props) => {
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    },
+})
+
+const UpdateRatesFromSheetModal = (props) => {
 
   
 
@@ -25,22 +37,22 @@ const ModalRatesForm = (props) => {
 
     const _getSheetData = async () => {
         try {
-
             let query = Object.assign({}, formData)
-            console.log(query)
             if(query.day < 10){
                 query.day = '0'+query.day
             }
             if(query.month < 10){
                 query.month = '0'+query.month-1
             }
-            console.log(query)
             let res = await getSheetData(query)
-            
             setDataFromSheet(res)
             setActionsLoading(false)
         } catch(er){
-            console.log(er)
+            showNotifications({
+                
+                title:er.response.data.message, 
+                type:'error'
+            })
             setActionsLoading(false)
         }
 
@@ -194,11 +206,11 @@ const ModalRatesForm = (props) => {
                                     <br/>
                                 </div>
                             </div>
-                            {console.log(actionsLoading)}
+                           
                             <button type='button' disabled={actionsLoading} onClick={()=>{
                                 setActionsLoading(true)
                                 _getSheetData()
-                            }} className='btn w-100 btn-block btn-primary'>{actionsLoading && <span className="spinner-border spinner-border-sm mr-1"></span>}Get sheet data</button>
+                            }} className='btn w-100 btn-block btn-primary'>{actionsLoading ? <span className="spinner-border spinner-border-sm mr-1"></span> : 'Get sheet data'}</button>
                         </>
                     )
                 }   
@@ -208,4 +220,4 @@ const ModalRatesForm = (props) => {
     )
 }
 
-export default ModalRatesForm
+export default UpdateRatesFromSheetModal

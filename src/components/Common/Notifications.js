@@ -1,84 +1,104 @@
+import Swal from "sweetalert2"
 import toastr from "toastr"
 import "toastr/build/toastr.min.css"
 
 const showNotifications = ({title, message, type, position='toast-top-right'}) => {
-    let toastType = type
-    const ele = document.getElementsByName("toastType");
-    //Close Button
-    const closeButton = true
 
-    //Debug
-    const debug = false
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    },
+  })
 
-    //Progressbar
-    const progressBar = false
+  Toast.fire({
+    icon: type,
+    title: title,
+    message: message
+  })
 
-    //Duplicates
-    const preventDuplicates = true
+    // let toastType = type
+    // const ele = document.getElementsByName("toastType");
+    // //Close Button
+    // const closeButton = true
 
-    //Newest on Top
-    const newestOnTop = true
+    // //Debug
+    // const debug = false
 
-    //position class
-    let positionClass = "toast-top-right"
+    // //Progressbar
+    // const progressBar = false
 
-    //Fetch position
-    for (let p = 0; p < position.length; p++) {
-      positionClass = 'toast-top-right'
-    }
+    // //Duplicates
+    // const preventDuplicates = true
 
-    //Show Easing
-    const showEasing = 'swing'
+    // //Newest on Top
+    // const newestOnTop = true
 
-    //Hide Easing
-    const hideEasing = 'linear'
+    // //position class
+    // let positionClass = "toast-top-right"
 
-    //show method
-    const showMethod = 'fadeIn'
+    // //Fetch position
+    // for (let p = 0; p < position.length; p++) {
+    //   positionClass = 'toast-top-right'
+    // }
 
-    //Hide method
-    const hideMethod = 'fadeOut'
+    // //Show Easing
+    // const showEasing = 'swing'
 
-    //show duration
-    const showDuration = 300
+    // //Hide Easing
+    // const hideEasing = 'linear'
 
-    //Hide duration
-    const hideDuration = 1000
+    // //show method
+    // const showMethod = 'fadeIn'
 
-    //timeout
-    const timeOut = 5000
+    // //Hide method
+    // const hideMethod = 'fadeOut'
 
-    //extended timeout
-    const extendedTimeOut = 1000
+    // //show duration
+    // const showDuration = 300
 
-    //Fetch checked Type
-    for (let i = 0; i < ele.length; i++) {
-      toastType = type
-    }
+    // //Hide duration
+    // const hideDuration = 1000
 
-    toastr.options = {
-      positionClass: positionClass,
-      timeOut: timeOut,
-      extendedTimeOut: extendedTimeOut,
-      closeButton: closeButton,
-      debug: debug,
-      progressBar: progressBar,
-      preventDuplicates: preventDuplicates,
-      newestOnTop: newestOnTop,
-      showEasing: showEasing,
-      hideEasing: hideEasing,
-      showMethod: showMethod,
-      hideMethod: hideMethod,
-      showDuration: showDuration,
-      hideDuration: hideDuration
-    }
+    // //timeout
+    // const timeOut = 5000
 
-    // setTimeout(() => toastr.success(`Settings updated `), 300)
-    //Toaster Types
-    if (toastType === "info") toastr.info(message, title)
-    else if (toastType === "warning") toastr.warning(message, title)
-    else if (toastType === "error") toastr.error(message, title)
-    else toastr.success(message, title)
+    // //extended timeout
+    // const extendedTimeOut = 1000
+
+    // //Fetch checked Type
+    // for (let i = 0; i < ele.length; i++) {
+    //   toastType = type
+    // }
+
+    // toastr.options = {
+    //   positionClass: positionClass,
+    //   timeOut: timeOut,
+    //   extendedTimeOut: extendedTimeOut,
+    //   closeButton: closeButton,
+    //   debug: debug,
+    //   progressBar: progressBar,
+    //   preventDuplicates: preventDuplicates,
+    //   newestOnTop: newestOnTop,
+    //   showEasing: showEasing,
+    //   hideEasing: hideEasing,
+    //   showMethod: showMethod,
+    //   hideMethod: hideMethod,
+    //   showDuration: showDuration,
+    //   hideDuration: hideDuration
+    // }
+
+    // // setTimeout(() => toastr.success(`Settings updated `), 300)
+    // //Toaster Types
+    // if (toastType === "info") toastr.info(message, title)
+    // else if (toastType === "warning") toastr.warning(message, title)
+    // else if (toastType === "error") toastr.error(message, title)
+    // else toastr.success(message, title)
 }
 
 export default showNotifications

@@ -33,6 +33,9 @@ import {
   toggleLeftmenu,
   changeSidebarType,
 } from "../../store/actions"
+import UpdateRatesFromSheetModal from 'components/FormModals/UpdateRatesFromSheetModal';
+import EmailEditModal from 'components/FormModals/EmailEditModal';
+import PasswordEditModal from 'components/FormModals/PasswordEditModal';
 
 const Header = props => {
   const history = useHistory()
@@ -45,51 +48,31 @@ const Header = props => {
   const [position, setPosition] = useState();
   const [open, setOpen] = useState(false);
 
-  const toggleTopDrawer = () => {
-    setPosition('right');
-    setOpen(!open)
-  }
+  
+ 
 
-  const onDrawerClose = () => {
-    setOpen(false);
-  }
-
-  function toggleFullscreen() {
-    if (
-      !document.fullscreenElement &&
-      /* alternative standard method */ !document.mozFullScreenElement &&
-      !document.webkitFullscreenElement
-    ) {
-      // current working methods
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen()
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen()
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen(
-          Element.ALLOW_KEYBOARD_INPUT
-        )
-      }
-    } else {
-      if (document.cancelFullScreen) {
-        document.cancelFullScreen()
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen()
-      } else if (document.webkitCancelFullScreen) {
-        document.webkitCancelFullScreen()
-      }
-    }
-  }
-
-  function tToggle() {
-    var body = document.body;
-    body.classList.toggle("vertical-collpsed");
-    body.classList.toggle("sidebar-enable");
-  }
-
+ 
 
   return (
     <React.Fragment>
+      {
+        location.hash === '#ADD_RATE' && <UpdateRatesFromSheetModal 
+            isOpen={location.hash === '#ADD_RATE'}
+            toggle={()=>history.push(location.pathname+location.search)}
+        />
+      }
+      {
+        location.hash === '#UPDATE_OWN_PASSWORD' && <PasswordEditModal 
+            isOpen={location.hash === '#UPDATE_OWN_PASSWORD'}
+            toggle={()=>history.push(location.pathname+location.search)}
+        />
+      }
+      {
+        location.hash === '#UPDATE_OWN_EMAIL' && <EmailEditModal 
+            isOpen={location.hash === '#UPDATE_OWN_EMAIL'}
+            toggle={()=>history.push(location.pathname+location.search)}
+        />
+      }
       <header id="page-topbar" className='dark'>
         <div className="navbar-header">
           <div className="d-flex">
@@ -201,28 +184,5 @@ const Header = props => {
   )
 }
 
-Header.propTypes = {
-  changeSidebarType: PropTypes.func,
-  leftMenu: PropTypes.any,
-  leftSideBarType: PropTypes.any,
-  showRightSidebar: PropTypes.any,
-  showRightSidebarAction: PropTypes.func,
-  t: PropTypes.any,
-  toggleLeftmenu: PropTypes.func
-}
 
-const mapStatetoProps = state => {
-  const {
-    layoutType,
-    showRightSidebar,
-    leftMenu,
-    leftSideBarType,
-  } = state.Layout
-  return { layoutType, showRightSidebar, leftMenu, leftSideBarType }
-}
-
-export default connect(mapStatetoProps, {
-  showRightSidebarAction,
-  toggleLeftmenu,
-  changeSidebarType,
-})(withTranslation()(Header))
+export default Header

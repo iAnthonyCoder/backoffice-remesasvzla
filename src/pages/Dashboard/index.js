@@ -47,7 +47,6 @@ import { withTranslation } from "react-i18next"
 import _, { set } from 'lodash';
 import { getHistory, getProducts } from 'helpers/fakebackend_helper';
 import { tSExternalModuleReference } from '@babel/types';
-import ModalRatesForm from './ModalRatesFromSheet';
 import moment from 'moment';
 
 
@@ -88,7 +87,7 @@ const Dashboard = props => {
       },..._columns])
       setProducts(products.totalData)
       getProductData()
-      const history = await getHistory('?size=50&sortfield=date&sortorder=desc')
+      const history = await getHistory('?size=50&sort_field=date&sort_order=desc')
       setHistory(history.data)
       setInitialized(true)
       setPageOptions({...pageOptions, totalSize: history.total, starting_at: history.starting_at})
@@ -118,7 +117,7 @@ const Dashboard = props => {
       if((pageOptions.totalSize > pageOptions.starting_at && initialized)){
        
         setLoading(true)
-        const res = await getHistory(`?size=50&starting_at=${parseInt(pageOptions.starting_at, 10)+parseInt(pageOptions.sizeToFetch, 10)}&sortfield=date&sortorder=desc`)
+        const res = await getHistory(`?size=50&starting_at=${parseInt(pageOptions.starting_at, 10)+parseInt(pageOptions.sizeToFetch, 10)}&sort_field=date&sort_order=desc`)
 
         let newData = history.concat(res.data)
         setHistory(newData)
@@ -200,19 +199,7 @@ const Dashboard = props => {
   if(!columns.length > 0) return 'Loading...'
   return (
     <React.Fragment>
-      {
-        location.hash === '#ADD_RATE' && <ModalRatesForm 
-            isOpen={location.hash === '#ADD_RATE'}
-            toggle={()=>_history.push(location.pathname+location.search)}
-            actionsLoading={actionsLoading}
-            setActionsLoading={setActionsLoading}
-            products={products}
-            _getProducts={_getProducts}
-            initialValues = {
-              initialValuesCreator(products)
-            }
-        />
-      }
+      
       <div className="page-content">
         <MetaTags>
           <title>Dashboard | Skote - React Admin & Dashboard Template</title>

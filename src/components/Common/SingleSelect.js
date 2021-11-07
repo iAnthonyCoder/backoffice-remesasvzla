@@ -27,7 +27,7 @@ class SingleSelect extends React.Component {
 		  return callback([]);
 		}
 
-		var endPointQuery=`?page=0&size=50&search=${inputValue}&sortField=name&sortOrder=asc`
+		var endPointQuery=`?page=0&size=50&search=${inputValue}&sort_Field=name&sort_order=asc`
 
 		if(this.props.extraQuery){
 			endPointQuery += `&filterfield[]=state&filtertype[]=eq&filtervalue[]=${this.props.extraQuery._id}`;
