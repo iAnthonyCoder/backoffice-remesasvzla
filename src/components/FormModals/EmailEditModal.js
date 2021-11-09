@@ -2,25 +2,44 @@ import React from 'react'
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { userService } from 'services';
+import showNotifications from 'components/Common/Notifications';
+import { updateMe, updateMeSuccess } from 'store/auth/login/actions';
+import jwt from 'jwt-decode' 
+import { useSelector } from 'react-redux';
 
 function EmailEditModal(props) {
 
+
     const [initialValues, setInitialValues] = React.useState({
-		email: '',
+		email: JSON.parse(localStorage.getItem('authUser')).email,
     });
 
     const validationSchema = Yup.object().shape({
         email: Yup.string().email()
     });
 
-    function onSubmit(fields, { setStatus, setSubmitting }) {
+    async function onSubmit(fields, { setStatus, setSubmitting }) {
         try {
             setStatus();
-            // userService.updateOwn(fields)
-        } catch(er) {
-            showNotifications('Error', err.response.data.message, 'error')
+            const response = await userService.updateOwn(fields)
+            await localStorage.setItem("authUser", JSON.stringify(jwt(response.token)))
+            await localStorage.setItem("access_token", JSON.stringify(response.token))
+            updateMeSuccess(jwt(response.token))
+            setSubmitting(false);
+            showNotifications({
+                title:'Email updated', 
+                type:'success'
+            })
+            props.toggle()
+        } catch(err) {
+            showNotifications({
+                title:err.response.data.message, 
+                type:'error'
+            })
         }
     }
+
 
     return (
         <Modal
@@ -42,8 +61,8 @@ function EmailEditModal(props) {
                             </div>
                         </div>
                         <div className='d-flex justify-content-end pt-4'>
-                            <button type="submit" disabled={props.actionsLoading} className="btn btn-primary">
-                                {props.actionsLoading ? <span className="spinner-border spinner-border-sm mr-1"></span> : 'Update Email'}
+                            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+                                {isSubmitting ? <span className="spinner-border spinner-border-sm mr-1"></span> : 'Update Email'}
                             </button>
                         </div>
                     </Form>

@@ -1,8 +1,8 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects"
 
 // Login Redux States
-import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN } from "./actionTypes"
-import { apiError, loginSuccess, logoutUserSuccess } from "./actions"
+import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN, UPDATE_ME } from "./actionTypes"
+import { apiError, loginSuccess, updateMe, updateMeSuccess } from "./actions"
 
 //Include Both Helper File with needed methods
 import { getFirebaseBackend } from "../../../helpers/firebase_helper"
@@ -14,12 +14,12 @@ import {
 } from "../../../helpers/fakebackend_helper"
 // const jwt = require('jsonwebtoken');
 import jwt from 'jwt-decode' 
+import { userService } from "services"
 
 const fireBaseBackend = getFirebaseBackend()
 
 function* loginUser({ payload: { user, history } }) {
   try {
-    console.log('aaaaaaaaaaadwdwaaaaaaaa')
         const response = yield call(postJwtLogin, {
         email: user.email,
         password: user.password,
@@ -45,14 +45,25 @@ function* loginUser({ payload: { user, history } }) {
   }
 }
 
+function* onUpdateMe({ payload: { user } }) {
+  try {
+    console.log('xxxxxxxxxxxxx')
+    yield call(userService.updateOwn(user))
+    yield put(updateMeSuccess(user))
+  } catch (error) {
+    if(error.message.includes('401')){
+      yield put(apiError('Incorrect credentials'))
+    } else {
+      yield put(apiError(error.message))
+    }
+    
+  }
+}
+
 function* logoutUser({ payload: { history } }) {
   try {
     localStorage.removeItem("authUser")
-
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(fireBaseBackend.logout)
-      yield put(logoutUserSuccess(response))
-    }
+    localStorage.removeItem("access_token")
     history.push("/login")
   } catch (error) {
     yield put(apiError(error))
@@ -84,6 +95,7 @@ function* socialLogin({ payload: { data, history, type } }) {
 
 function* authSaga() {
   yield takeEvery(LOGIN_USER, loginUser)
+  yield takeEvery(UPDATE_ME, onUpdateMe)
   yield takeLatest(SOCIAL_LOGIN, socialLogin)
   yield takeEvery(LOGOUT_USER, logoutUser)
 }

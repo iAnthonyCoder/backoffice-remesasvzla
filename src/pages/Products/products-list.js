@@ -67,7 +67,6 @@ const ProductsList = props => {
         {
             text: "id",
             dataField: "_id",
-            sort: true,
             hidden: true,
             formatter: (cellContent, product) => (
                 <>
@@ -78,17 +77,15 @@ const ProductsList = props => {
         {
             dataField: "currency_to_receive.iso_code",
             text: "Currency To Receive",
-            sort: true,
         },
         {
             dataField: "currency_to_deliver.iso_code",
             text: "Currency To Deliver",
-            sort: true,
         },
         {
             dataField: "cash_deliver",
-            text: "Cash deliver",
-            sort: true,
+            text: "EFE",
+            formatter: (cellContent) => (<span className={`${cellContent ? 'font-size-12 badge-soft-primary badge badge-primary badge-pill' : 'danger'}`}>{cellContent && 'EFE'}</span>)
         },
         // {
         //     dataField: "status",
@@ -152,10 +149,10 @@ const ProductsList = props => {
         const product = arg
         setProductToEdit({
             _id: product._id,
-            name: product.name,
             currency_to_receive: product.currency_to_receive,
             currency_to_deliver: product.currency_to_deliver,
-            rate: product.rate,
+            cash_deliver: product.cash_deliver,
+            url: product.url,
         })
 
         setIsEdit(true)
@@ -191,6 +188,7 @@ const ProductsList = props => {
                 currency_to_receive: values.currency_to_receive,
                 currency_to_deliver: values.currency_to_deliver,
                 cash_deliver: values.cash_deliver,
+                url: values.url,
             }
             onUpdateProduct(updateProduct)
             setProductList(updateProduct)
@@ -198,7 +196,8 @@ const ProductsList = props => {
             const newProduct = {
                 currency_to_receive: values["currency_to_receive"],
                 currency_to_deliver: values["currency_to_deliver"],
-                cash_deliver: values["cash_deliver"]
+                cash_deliver: values["cash_deliver"],
+                url: values.url,
             }
             onAddNewProduct(newProduct)
         }

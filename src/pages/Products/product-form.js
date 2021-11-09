@@ -12,6 +12,7 @@ function ProductForm(props) {
     const [initialValues, setInitialValues] = React.useState({
 		currency_to_receive: '',
 		currency_to_deliver: '',
+        url: '',
         cash_deliver: false
     });
 
@@ -22,19 +23,19 @@ function ProductForm(props) {
     
 
     const validationSchema = Yup.object().shape({
-
         currency_to_receive: Yup.object()
-
             .required('currency_to_receive is required'),
-
         currency_to_deliver: Yup.object()
             .required('currency_to_receive is required'),
-
+        url: Yup.string()
+            .required('currency_to_receive is required')
+            .max(200, 'The url string length cannot contain more than 200 characters'),
         cash_deliver: Yup.boolean()
     
     });
 
     function onSubmit(fields, { setStatus, setSubmitting }) {
+        console.log(fields)
         setStatus();
         fields.currency_to_receive = fields.currency_to_receive._id
         fields.currency_to_deliver = fields.currency_to_deliver._id
@@ -79,11 +80,16 @@ function ProductForm(props) {
                     </div>
                 </div>
                 <div className='col-12 mt-3'>
+                    <div className="form-group">
+                        <label className="form-label ml-2" for="url"> Url</label>
+                        <Field type="text" name="url" placeholder='Url' className='form-control' />
+                        <ErrorMessage name="url" component="div" className="invalid-feedback" />
+                    </div>
+                </div>
+                <div className='col-12 mt-3'>
                     <div className="form-group d-flex align-items-center">
-
                         <Field type="checkbox" name="cash_deliver" id='cash_deliver' />&nbsp;
                         <label className="form-label ml-2 mb-0" for="cash_deliver"> Cash Deliver (EFE)</label>
-                        
                         <ErrorMessage name="cash_deliver" component="div" className="invalid-feedback" />
                     </div>
                 </div>

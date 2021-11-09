@@ -1,10 +1,10 @@
 import axios from "axios";
-let API_URL = process.env.REACT_APP_DEFAULTAPI
+import { del, get, post, put } from "./../helpers/api_helper"
 
 export const userService = {
     updateOwn
 };
 
-function updateOwn(params) {
-    return axios.put(`${API_URL}/users`, params);
+async function updateOwn(params) {
+   return put(`/users/me`, params);
 }
