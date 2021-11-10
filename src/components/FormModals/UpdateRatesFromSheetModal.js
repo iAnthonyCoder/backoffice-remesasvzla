@@ -79,10 +79,16 @@ const UpdateRatesFromSheetModal = (props) => {
             // setDataFromSheet(dataFromSheet.filter(x => x.date!=payload.date))
             // props.toggle()
             // props._getProducts()
-
+            showNotifications({
+                title:'Rates imported', 
+                type:'success'
+            })
         } catch(er) {
             setActionsLoading(false)
-            console.log(er)
+            showNotifications({
+                title:er.response.data.message, 
+                type:'error'
+            })
         }
     }
 

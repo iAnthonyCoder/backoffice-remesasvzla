@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from "react"
 import MetaTags from 'react-meta-tags';
+import queryString from 'query-string'
 import {
 
 
@@ -87,7 +88,17 @@ const Dashboard = props => {
       },..._columns])
       setProducts(products.totalData)
       getProductData()
-      const history = await getHistory('?size=50&sort_field=date&sort_order=desc')
+      let queryS = {
+        size: 50,
+        sort_field: 'date',
+        sort_order: 'asc',
+        filter_field: ['date', 'date'],
+        filter_type: ['gte', 'lte'],
+        filter_value: [startDate, endDate],
+      }
+      const history = await getHistory('?'+ queryString.stringify(queryS, {
+        arrayFormat:'bracket'
+      }))
       setHistory(history.data)
       setInitialized(true)
       setPageOptions({...pageOptions, totalSize: history.total, starting_at: history.starting_at})
@@ -111,6 +122,8 @@ const Dashboard = props => {
     }
   }
 
+ 
+
   const fetchMore = async () => {
     console.log(pageOptions)
     try {
@@ -118,7 +131,6 @@ const Dashboard = props => {
        
         setLoading(true)
         const res = await getHistory(`?size=50&starting_at=${parseInt(pageOptions.starting_at, 10)+parseInt(pageOptions.sizeToFetch, 10)}&sort_field=date&sort_order=desc`)
-
         let newData = history.concat(res.data)
         setHistory(newData)
         setPageOptions({...pageOptions, totalSize: res.total, starting_at: res.starting_at, sizePerPage: newData.length})
@@ -193,6 +205,14 @@ const Dashboard = props => {
     
   }
 
+ 
+
+  const [ startDate, setStartDate ] = React.useState(moment().subtract(7, 'days').format('yyyy-MM-DD'))
+  const [ endDate, setEndDate ] = React.useState(moment().format('yyyy-MM-DD'))
+  useEffect(() => {
+    _getProducts()
+  }, [startDate, endDate])
+
   const [ openFormModal, setOpenFormModal ] = useState(false)
   const [ actionsLoading, setActionsLoading ] = useState(false)
 
@@ -216,12 +236,21 @@ const Dashboard = props => {
      
               <Card>
                 <CardBody>
+                  <div className='d-flex align-items-between w-100'>
                   <div>
                     <CardTitle className="h4">Rate History</CardTitle>
-                    <p class="card-title-desc">Data from the Google Sheet</p>
+                    <p class="card-title-desc">Range {moment.duration(moment(endDate).utc(0).add(2, 'days').startOf('day').diff(moment(startDate).utc(0).endOf('day'))).humanize(true).replace('in ', '')}</p>
                     {/* <button onClick={()=>setOpenFormModal(true)} className='btn btn-primary'>Update all</button> */}
                     {/* <button onClick={()=>setOpenFormModal(true)} className='btn btn-primary'><i className='bx bx-spreadsheet mr-1'></i>&nbsp;Update from sheet</button> */}
                   </div>
+                  <div style={{marginLeft:'auto'}}>
+                  <div className="d-flex align-items-center">
+                      <input type='date' value={startDate} onChange={(e)=>setStartDate(e.target.value)} className='form-control mr-2'></input><span style={{paddingRight:'.5rem', paddingLeft:'.5rem'}}>-</span> 
+                      <input type='date' value={endDate} onChange={(e)=>setEndDate(e.target.value)} className='form-control ml-2'></input>
+                    </div>
+                    </div>
+                  </div>
+                  
                   {console.log(history)}
                   <PaginationProvider
                     pagination={paginationFactory(pageOptions)}
