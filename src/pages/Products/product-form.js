@@ -1,7 +1,6 @@
 import React from 'react'
 import { SingleSelect } from 'components/Common/SingleSelect';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { getCurrencies } from 'helpers/fakebackend_helper';
 import * as Yup from 'yup';
 
 
@@ -35,10 +34,7 @@ function ProductForm(props) {
     });
 
     function onSubmit(fields, { setStatus, setSubmitting }) {
-        console.log(fields)
         setStatus();
-        fields.currency_to_receive = fields.currency_to_receive._id
-        fields.currency_to_deliver = fields.currency_to_deliver._id
         props.handleValidProductSubmit(null, fields)
     }
 

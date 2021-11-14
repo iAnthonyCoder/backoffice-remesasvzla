@@ -1,82 +1,86 @@
 import { call, put, takeEvery } from "redux-saga/effects"
 
-// Crypto Redux States
 import { GET_PRODUCTS, GET_PRODUCT_PROFILE , ADD_NEW_PRODUCT , DELETE_PRODUCT, UPDATE_PRODUCT } from "./actionTypes"
 
 import {
-  getProductsSuccess,
-  getProductsFail,
-  getProductProfileSuccess,
-  getProductProfileFail,
-  addProductFail,
-  addProductSuccess,
-  updateProductSuccess,
-  updateProductFail,
-  deleteProductSuccess,
-  deleteProductFail,
+    getProductsSuccess,
+    getProductsFail,
+    getProductProfileSuccess,
+    getProductProfileFail,
+    addProductFail,
+    addProductSuccess,
+    updateProductSuccess,
+    updateProductFail,
+    deleteProductSuccess,
+    deleteProductFail,
 } from "./actions"
 
-//Include Both Helper File with needed methods
-import { getProducts, getProductProfile , addNewProduct, updateProduct ,deleteProduct } from "../../helpers/fakebackend_helper"
+import { productService } from "services"
 
-function* fetchProducts(query) {
-  try {
-    console.log(yield call(getProducts, query))
-    const response = yield call(getProducts, query)
-    console.log('aaaaaaaaaaa')
-    
-    yield put(getProductsSuccess(response))
-  } catch (error) {
-    console.log(error)
-    yield put(getProductsFail(error))
-  }
+function* fetchProducts({payload: query}) {
+    try {
+        const response = yield call(productService.list, query)
+        yield put(getProductsSuccess(response))
+    } catch (error) {
+        yield put(getProductsFail(error))
+    }
 }
 
 function* fetchProductProfile() {
-  try {
-    const response = yield call(getProductProfile)
-    yield put(getProductProfileSuccess(response))
-  } catch (error) {
-    yield put(getProductProfileFail(error))
-  }
+    try {
+        const response = yield call(productService.find)
+        yield put(getProductProfileSuccess(response))
+    } catch (error) {
+        yield put(getProductProfileFail(error))
+    }
 }
 
 function* onUpdateProduct({ payload: product }) {
-  try {
-    yield call(updateProduct, product)
-    yield put(updateProductSuccess(product))
-  } catch (error) {
-    yield put(updateProductFail(error))
-  }
+    try {
+        yield call(productService.update, {
+            _id:product._id,
+            params:{
+                ...product, 
+                _id:product._id, 
+                currency_to_deliver: product.currency_to_deliver._id, 
+                currency_to_receive: product.currency_to_receive._id
+            }
+        })
+        yield put(updateProductSuccess(product))
+    } catch (error) {
+        yield put(updateProductFail(error))
+    }
 }
 
 function* onDeleteProduct({ payload: product }) {
-  try {
-    const response = yield call(deleteProduct, product)
-    yield put(deleteProductSuccess(response))
-  } catch (error) {
-    yield put(deleteProductFail(error))
-  }
+    try {
+        const response = yield call(productService.delete, product._id)
+        yield put(deleteProductSuccess(response))
+    } catch (error) {
+        yield put(deleteProductFail(error))
+    }
 }
 
 function* onAddNewProduct({ payload: product }) {
-
-  try {
-    const response = yield call(addNewProduct, product)
-    yield put(addProductSuccess(Object.assign({}, product, response)))
-    yield put(addProductFail(null))
-  } catch (error) {
-
-    yield put(addProductFail(error))
-  }
+    try {
+        const response = yield call(productService.create, {
+          ...product, 
+          currency_to_deliver: product.currency_to_deliver._id, 
+          currency_to_receive: product.currency_to_receive._id
+        })
+        yield put(addProductSuccess(Object.assign({}, product, response)))
+        yield put(addProductFail(null))
+    } catch (error) {
+        yield put(addProductFail(error))
+    }
 }
 
 function* contactsSaga() {
-  yield takeEvery(GET_PRODUCTS, fetchProducts)
-  yield takeEvery(GET_PRODUCT_PROFILE, fetchProductProfile)
-  yield takeEvery(ADD_NEW_PRODUCT, onAddNewProduct)
-  yield takeEvery(UPDATE_PRODUCT, onUpdateProduct)
-  yield takeEvery(DELETE_PRODUCT, onDeleteProduct)
+    yield takeEvery(GET_PRODUCTS, fetchProducts)
+    yield takeEvery(GET_PRODUCT_PROFILE, fetchProductProfile)
+    yield takeEvery(ADD_NEW_PRODUCT, onAddNewProduct)
+    yield takeEvery(UPDATE_PRODUCT, onUpdateProduct)
+    yield takeEvery(DELETE_PRODUCT, onDeleteProduct)
 }
 
 export default contactsSaga;

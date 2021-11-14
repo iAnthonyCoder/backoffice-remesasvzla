@@ -52,10 +52,12 @@ const contacts = (state = INIT_STATE, action) => {
    
       return {
         ...state,
-        productProfile: action.payload,
+        product: action.payload,
       }
 
       case UPDATE_PRODUCT_SUCCESS:
+
+        
         return {
           ...state,
           products: state.products.map(product =>

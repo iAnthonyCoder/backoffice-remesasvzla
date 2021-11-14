@@ -454,7 +454,7 @@ const Navbar = props => {
                         </Link>
                       </div>
                     </div>
-                    {console.log(props)}
+              
                     <div className="dropdown">
                       <Link
                         to="/#"

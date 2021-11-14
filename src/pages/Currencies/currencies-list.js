@@ -27,7 +27,6 @@ import DeleteDialog from '../../components/Common/DeleteDialog'
 
 const CurrenciesList = props => {
     const { currencies, onGetCurrencies } = props
-    const [currencyList, setCurrencyList] = useState([])
     const [modal, setModal] = useState(false);
     const [showError, setShowError] = useState(false);
     const [isEdit, setIsEdit] = useState(false)
@@ -35,16 +34,15 @@ const CurrenciesList = props => {
     const [scopedItem, setScopedItem] = useState({})
     const [actionsLoading, setActionsLoading] = useState(false)
 
-    const { SearchBar } = Search
 
-    const onPageChange = (page, sizePerPage) => {
-        props.history.push(window.location.pathname+'?page='+page)
-    }
+    // const onPageChange = (page, sizePerPage) => {
+    //     props.history.push(window.location.pathname+'?page='+page)
+    // }
 
     const pageOptions = {
         sizePerPage: 20,
         totalSize: props.totalSize, // replace later with size(currencies),
-        onPageChange: onPageChange,
+        // onPageChange: onPageChange,
         custom: true,
         page: Math.ceil(props.from/20)
     }
@@ -55,9 +53,7 @@ const CurrenciesList = props => {
         order: 'desc' // desc or asc
     }];
 
-    const selectRow = {
-        mode: 'checkbox'
-    };
+  
 
     const currencyListColumns = [
         {
@@ -131,21 +127,19 @@ const CurrenciesList = props => {
         }
     }, [onGetCurrencies, currencies.from, window.location.search]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        onGetCurrencies(window.location.search);
-        setIsEdit(false)
+    //     onGetCurrencies(window.location.search);
+    //     setIsEdit(false)
     
-    }, [window.location.search]);
+    // }, [window.location.search]);
 
     useEffect(() => {
-        setCurrencyList(currencies);
         setIsEdit(false)
     }, [currencies])
 
     useEffect(() => {
         if (!isEmpty(currencies) && !!isEdit) {
-            setCurrencyList(currencies)
             setIsEdit(false)
         }
     }, [currencies])
@@ -154,10 +148,12 @@ const CurrenciesList = props => {
         setModal(!modal)
     }
 
+    const [ currencyToEdit, setCurrencyToEdit ] = useState(false)
+
     const handleCurrencyClick = arg => {
         setShowError(false)
         const currency = arg
-        setCurrencyList({
+        setCurrencyToEdit({
             _id: currency._id,
             symbol: currency.symbol,
             iso_code: currency.iso_code,
@@ -168,7 +164,7 @@ const CurrenciesList = props => {
 
         setIsEdit(true)
 
-        toggle()
+        setModal(true)
     }
 
     const openDeleteDialog = (currency) => {
@@ -192,7 +188,7 @@ const CurrenciesList = props => {
         const { onAddNewCurrency, onUpdateCurrency } = props
         if (isEdit) {
             const updateCurrency = {
-                _id: currencyList._id,
+                _id: currencyToEdit._id,
                 symbol: values.symbol,
                 iso_code: values.iso_code,
                 country: values.country,
@@ -200,7 +196,6 @@ const CurrenciesList = props => {
                 name: values.name,
             }
             onUpdateCurrency(updateCurrency)
-            setCurrencyList(updateCurrency)
         } else {
             const newCurrency = {
                 symbol: values["symbol"],
@@ -232,7 +227,7 @@ const CurrenciesList = props => {
 
     const handleCurrencyClicks = () => {
         setShowError(false)
-        setCurrencyList('')
+        setCurrencyToEdit(false)
         setIsEdit(false)
         toggle()
     }
@@ -257,13 +252,11 @@ const CurrenciesList = props => {
                 handleDelete={handleDeleteCurrency}
                 actionsLoading={actionsLoading}
             />
-            {
-                console.log(scopedItem)
-            }
             <div className="page-content">
                 <MetaTags>
                     <title>Currency List | Skote - React Admin & Dashboard Template</title>
                 </MetaTags>
+           
                 <Container fluid>
                     {/* Render Breadcrumbs */}
                     <Breadcrumbs title="Contacts" breadcrumbItem="Currency List" />
@@ -313,7 +306,7 @@ const CurrenciesList = props => {
                                                                         }
                                                                         remote
                                                                         onTableChange={
-                                                                            (e)=>console.log('asdasd')
+                                                                            (e)=>''
                                                                         }
                                                                         bordered={false}
                                                                         striped={false}
@@ -336,7 +329,7 @@ const CurrenciesList = props => {
                                                                                 <Row form>
                                                                                     <Col xs={12}>
                                                                                         {(!_.isEmpty(props.error) && showError) ? (
-                                                                                            <Alert color="danger">{props.error.response.data.message}</Alert>
+                                                                                            <Alert color="danger">{props.error.response.data.message ? props.error.response.data.message : props.error.response.data.errors[0].message}</Alert>
                                                                                         ) : null}
                                                                                         <div className="mb-3">
                                                                                             <AvField
@@ -348,7 +341,7 @@ const CurrenciesList = props => {
                                                                                                 validate={{
                                                                                                   required: { value: true },
                                                                                                 }}
-                                                                                                value={currencyList.name || ""}
+                                                                                                value={currencyToEdit.name || ""}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="mb-3">
@@ -361,7 +354,7 @@ const CurrenciesList = props => {
                                                                                                 validate={{
                                                                                                   required: { value: true },
                                                                                                 }}
-                                                                                                value={currencyList.symbol || ""}
+                                                                                                value={currencyToEdit.symbol || ""}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="mb-3">
@@ -374,7 +367,7 @@ const CurrenciesList = props => {
                                                                                                 validate={{
                                                                                                   required: { value: true },
                                                                                                 }}
-                                                                                                value={currencyList.country || ""}
+                                                                                                value={currencyToEdit.country || ""}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="mb-3">
@@ -387,7 +380,7 @@ const CurrenciesList = props => {
                                                                                                 validate={{
                                                                                                   required: { value: true },
                                                                                                 }}
-                                                                                                value={currencyList.country_code || ""}
+                                                                                                value={currencyToEdit.country_code || ""}
                                                                                             />
                                                                                         </div>
                                                                                        
@@ -401,7 +394,7 @@ const CurrenciesList = props => {
                                                                                                 validate={{
                                                                                                   required: { value: true },
                                                                                                 }}
-                                                                                                value={currencyList.iso_code || ""}
+                                                                                                value={currencyToEdit.iso_code || ""}
                                                                                             />
                                                                                         </div>
                                                                                     </Col>

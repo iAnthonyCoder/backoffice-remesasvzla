@@ -1,82 +1,83 @@
 import { call, put, takeEvery } from "redux-saga/effects"
 
-// Crypto Redux States
 import { GET_CURRENCIES, GET_CURRENCY_PROFILE , ADD_NEW_CURRENCY , DELETE_CURRENCY, UPDATE_CURRENCY } from "./actionTypes"
 
 import {
-  getCurrenciesSuccess,
-  getCurrenciesFail,
-  getCurrencyProfileSuccess,
-  getCurrencyProfileFail,
-  addCurrencyFail,
-  addCurrencySuccess,
-  updateCurrencySuccess,
-  updateCurrencyFail,
-  deleteCurrencySuccess,
-  deleteCurrencyFail,
+    getCurrenciesSuccess,
+    getCurrenciesFail,
+    getCurrencyProfileSuccess,
+    getCurrencyProfileFail,
+    addCurrencyFail,
+    addCurrencySuccess,
+    updateCurrencySuccess,
+    updateCurrencyFail,
+    deleteCurrencySuccess,
+    deleteCurrencyFail,
 } from "./actions"
 
-//Include Both Helper File with needed methods
-import { getCurrencies, getCurrencyProfile , addNewCurrency, updateCurrency ,deleteCurrency } from "../../helpers/fakebackend_helper"
+import { currencyService } from "services"
 
-function* fetchCurrencies(query) {
-  try {
-    console.log(yield call(getCurrencies, query))
-    const response = yield call(getCurrencies, query)
-    console.log('aaaaaaaaaaa')
-    
-    yield put(getCurrenciesSuccess(response))
-  } catch (error) {
-    console.log(error)
-    yield put(getCurrenciesFail(error))
-  }
+function* fetchCurrencies({payload: query}) {
+    try {
+        const response = yield call(currencyService.list, query)
+        yield put(getCurrenciesSuccess(response))
+    } catch (error) {
+        yield put(getCurrenciesFail(error))
+    }
 }
 
 function* fetchCurrencyProfile() {
-  try {
-    const response = yield call(getCurrencyProfile)
-    yield put(getCurrencyProfileSuccess(response))
-  } catch (error) {
-    yield put(getCurrencyProfileFail(error))
-  }
+    try {
+        const response = yield call(currencyService.find)
+        yield put(getCurrencyProfileSuccess(response))
+    } catch (error) {
+        yield put(getCurrencyProfileFail(error))
+    }
 }
 
 function* onUpdateCurrency({ payload: currency }) {
-  try {
-    yield call(updateCurrency, currency)
-    console.log('aaaaaaaaaaa')
-    yield put(updateCurrencySuccess(currency))
-  } catch (error) {
-    yield put(updateCurrencyFail(error))
-  }
+    try {
+        yield call(currencyService.update, {
+            _id:currency._id,
+            params:{
+                ...currency, 
+            }
+        })
+        yield put(updateCurrencySuccess(currency))
+    } catch (error) {
+        yield put(updateCurrencyFail(error))
+    }
 }
 
 function* onDeleteCurrency({ payload: currency }) {
-  try {
-    const response = yield call(deleteCurrency, currency)
-    yield put(deleteCurrencySuccess(response))
-  } catch (error) {
-    yield put(deleteCurrencyFail(error))
-  }
+    try {
+        const response = yield call(currencyService.delete, currency._id)
+        yield put(deleteCurrencySuccess(response))
+    } catch (error) {
+        yield put(deleteCurrencyFail(error))
+    }
 }
 
 function* onAddNewCurrency({ payload: currency }) {
-
-  try {
-    const response = yield call(addNewCurrency, currency)
-    yield put(addCurrencySuccess(Object.assign({}, currency, response)))
-  } catch (error) {
-
-    yield put(addCurrencyFail(error))
-  }
+    try {
+    
+        const response = yield call(currencyService.create, {
+          ...currency, 
+        })
+        yield put(addCurrencySuccess(Object.assign({}, currency, response)))
+        yield put(addCurrencyFail(null))
+    } catch (error) {
+ 
+        yield put(addCurrencyFail(error))
+    }
 }
 
 function* contactsSaga() {
-  yield takeEvery(GET_CURRENCIES, fetchCurrencies)
-  yield takeEvery(GET_CURRENCY_PROFILE, fetchCurrencyProfile)
-  yield takeEvery(ADD_NEW_CURRENCY, onAddNewCurrency)
-  yield takeEvery(UPDATE_CURRENCY, onUpdateCurrency)
-  yield takeEvery(DELETE_CURRENCY, onDeleteCurrency)
+    yield takeEvery(GET_CURRENCIES, fetchCurrencies)
+    yield takeEvery(GET_CURRENCY_PROFILE, fetchCurrencyProfile)
+    yield takeEvery(ADD_NEW_CURRENCY, onAddNewCurrency)
+    yield takeEvery(UPDATE_CURRENCY, onUpdateCurrency)
+    yield takeEvery(DELETE_CURRENCY, onDeleteCurrency)
 }
 
 export default contactsSaga;

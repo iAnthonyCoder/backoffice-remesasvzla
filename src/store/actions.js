@@ -6,29 +6,9 @@ export * from "./auth/login/actions"
 export * from "./auth/forgetpwd/actions"
 export * from "./auth/profile/actions"
 
-//Ecommerce
-export * from "./e-commerce/actions"
 
-//Calendar
-export * from "./calendar/actions"
 
-//chat
-export * from "./chat/actions"
-
-//crypto
-export * from "./crypto/actions"
-
-//invoices
-export * from "./invoices/actions"
-
-// projects
-export * from "./projects/actions"
-
-// mails
-export * from "./mails/actions"
 
 // tasks
 export * from "./currencies/actions"
 
-// contacts
-export * from "./users/actions"

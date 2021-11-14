@@ -1,6 +1,5 @@
 import { Card, CardBody, Col, Container, Row, Modal, Button, ModalHeader, ModalBody, Alert } from "reactstrap"
 import moment from 'moment';
-import { bulkUpdateProducts, getProduct, getSheetData } from "helpers/fakebackend_helper";
 import React from 'react'
 import _ from "lodash";
 import {

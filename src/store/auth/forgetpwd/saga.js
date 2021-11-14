@@ -5,13 +5,6 @@ import { FORGET_PASSWORD } from "./actionTypes"
 import { userForgetPasswordSuccess, userForgetPasswordError } from "./actions"
 
 //Include Both Helper File with needed methods
-import { getFirebaseBackend } from "../../../helpers/firebase_helper"
-import {
-  postFakeForgetPwd,
-  postJwtForgetPwd,
-} from "../../../helpers/fakebackend_helper"
-
-const fireBaseBackend = getFirebaseBackend()
 
 //If user is send successfully send mail link then dispatch redux action's are directly from here.
 function* forgetUser({ payload: { user, history } }) {

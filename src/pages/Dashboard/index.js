@@ -3,11 +3,7 @@ import React, { useEffect, useState } from "react"
 import MetaTags from 'react-meta-tags';
 import queryString from 'query-string'
 import {
-
-
-  
   Button,
-
   Input,
   Modal,
   ModalHeader,
@@ -46,9 +42,9 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 //i18n
 import { withTranslation } from "react-i18next"
 import _, { set } from 'lodash';
-import { getHistory, getProducts } from 'helpers/fakebackend_helper';
 import { tSExternalModuleReference } from '@babel/types';
 import moment from 'moment';
+import { productService, refreshService } from 'services';
 
 
 const Dashboard = props => {
@@ -71,9 +67,10 @@ const Dashboard = props => {
   const _getProducts = async () => {
     try {
       setLoading(true)
-      const products = await getProducts()
-      let _columns = [...products.totalData.map(x => {
+      const products = await productService.list()
+      let _columns = [...products.totalData.map((x, i) => {
         return {
+          key:i,
           dataField:`${x.currency_to_receive.iso_code}/${x.currency_to_deliver.iso_code}${x.cash_deliver ? ' (EFE)' : ''}`,
           text:`${x.currency_to_receive.iso_code}/${x.currency_to_deliver.iso_code}${x.cash_deliver ? ' (EFE)' : ''}`,
           sort:false,
@@ -96,7 +93,7 @@ const Dashboard = props => {
         filter_type: ['gte', 'lte'],
         filter_value: [startDate, endDate],
       }
-      const history = await getHistory('?'+ queryString.stringify(queryS, {
+      const history = await refreshService.list('?'+ queryString.stringify(queryS, {
         arrayFormat:'bracket'
       }))
       setHistory(history.data)
@@ -110,7 +107,7 @@ const Dashboard = props => {
 
   const getProductData = async () => {
     try {
-      const products = await getProducts()
+      const products = await productService.list()
       let _data = [{'date':1}]
       products.totalData.map(x => {
         _data[0][x.name] = x.rate
@@ -125,12 +122,12 @@ const Dashboard = props => {
  
 
   const fetchMore = async () => {
-    console.log(pageOptions)
+  
     try {
       if((pageOptions.totalSize > pageOptions.starting_at && initialized)){
        
         setLoading(true)
-        const res = await getHistory(`?size=50&starting_at=${parseInt(pageOptions.starting_at, 10)+parseInt(pageOptions.sizeToFetch, 10)}&sort_field=date&sort_order=desc`)
+        const res = await refreshService.list(`?size=50&starting_at=${parseInt(pageOptions.starting_at, 10)+parseInt(pageOptions.sizeToFetch, 10)}&sort_field=date&sort_order=desc`)
         let newData = history.concat(res.data)
         setHistory(newData)
         setPageOptions({...pageOptions, totalSize: res.total, starting_at: res.starting_at, sizePerPage: newData.length})
@@ -239,7 +236,7 @@ const Dashboard = props => {
                   <div className='d-flex align-items-between w-100'>
                   <div>
                     <CardTitle className="h4">Rate History</CardTitle>
-                    <p class="card-title-desc">Range {moment.duration(moment(endDate).utc(0).add(2, 'days').startOf('day').diff(moment(startDate).utc(0).endOf('day'))).humanize(true).replace('in ', '')}</p>
+                    <p className="card-title-desc">Range {moment.duration(moment(endDate).utc(0).add(2, 'days').startOf('day').diff(moment(startDate).utc(0).endOf('day'))).humanize(true).replace('in ', '')}</p>
                     {/* <button onClick={()=>setOpenFormModal(true)} className='btn btn-primary'>Update all</button> */}
                     {/* <button onClick={()=>setOpenFormModal(true)} className='btn btn-primary'><i className='bx bx-spreadsheet mr-1'></i>&nbsp;Update from sheet</button> */}
                   </div>
@@ -251,7 +248,7 @@ const Dashboard = props => {
                     </div>
                   </div>
                   
-                  {console.log(history)}
+         
                   <PaginationProvider
                     pagination={paginationFactory(pageOptions)}
                     keyField='id'
@@ -260,7 +257,7 @@ const Dashboard = props => {
                   >
                     {({ paginationProps, paginationTableProps }) => (
                       <ToolkitProvider
-                        keyField='id'
+                        keyField='_id'
                         columns={columns}
                         data={history}
                         search
@@ -274,7 +271,7 @@ const Dashboard = props => {
                               <Col xl="12">
                                 <div className="table-responsive" id='mapping_table'>
                                   <BootstrapTable
-                                    keyField={"id"}
+                                    keyField={"_id"}
                                     responsive
                                     bordered={true}
                                     striped={false}
@@ -315,7 +312,7 @@ const Dashboard = props => {
                   {
                    loading && <div className='d-flex w-100 mt-4 justify-content-center'>
                    <div className="spinner-border" role="status">
-                 <span class="sr-only">Loading...</span>
+                 <span className="sr-only">Loading...</span>
                </div>
                 </div> 
                   }

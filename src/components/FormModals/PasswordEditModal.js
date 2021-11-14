@@ -33,7 +33,7 @@ function PasswordEditModal(props) {
             })
             props.toggle()
         } catch(err) {
-            console.log(err)
+        
             showNotifications({
                 title:err.response.data.message, 
                 type:'error'

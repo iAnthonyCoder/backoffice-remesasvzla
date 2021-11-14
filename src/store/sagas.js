@@ -6,16 +6,8 @@ import AuthSaga from "./auth/login/saga"
 import ForgetSaga from "./auth/forgetpwd/saga"
 import ProfileSaga from "./auth/profile/saga"
 import LayoutSaga from "./layout/saga"
-import ecommerceSaga from "./e-commerce/saga"
-import calendarSaga from "./calendar/saga"
-import chatSaga from "./chat/saga"
-import cryptoSaga from "./crypto/saga"
-import invoiceSaga from "./invoices/saga"
-import projectsSaga from "./projects/saga"
-import mailsSaga from "./mails/saga"
-import tasksSaga from "./currencies/saga"
-import contactsSaga from "./users/saga"
-import accountsSaga from "./products/saga"
+import currenciesSaga from "./currencies/saga"
+import productsSaga from "./products/saga"
 
 export default function* rootSaga() {
   yield all([
@@ -25,15 +17,7 @@ export default function* rootSaga() {
     ProfileSaga(),
     ForgetSaga(),
     LayoutSaga(),
-    fork(ecommerceSaga),
-    fork(calendarSaga),
-    fork(chatSaga),
-    fork(cryptoSaga),
-    fork(invoiceSaga),
-    fork(projectsSaga),
-    fork(mailsSaga),
-    fork(tasksSaga),
-    fork(contactsSaga),
-    fork(accountsSaga),
+    fork(currenciesSaga),
+    fork(productsSaga),
   ])
 }

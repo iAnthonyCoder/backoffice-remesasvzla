@@ -5,29 +5,20 @@ import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN, UPDATE_ME } from "./actionTypes"
 import { apiError, loginSuccess, updateMe, updateMeSuccess } from "./actions"
 
 //Include Both Helper File with needed methods
-import { getFirebaseBackend } from "../../../helpers/firebase_helper"
-import {
-  postFakeLogin,
-  postJwtLogin,
-  postSocialLogin,
-  getMe
-} from "../../../helpers/fakebackend_helper"
+
 // const jwt = require('jsonwebtoken');
 import jwt from 'jwt-decode' 
-import { userService } from "services"
+import { authService, userService } from "services"
 
-const fireBaseBackend = getFirebaseBackend()
 
 function* loginUser({ payload: { user, history } }) {
   try {
-        const response = yield call(postJwtLogin, {
+        const response = yield call(authService.login, {
         email: user.email,
         password: user.password,
       })
       const { code, data } = response
-      console.log(response)
       if(code){
-        console.log(data)
         throw new Error(data.message || data.errors[0]['message'])
       } else {
         localStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
@@ -47,7 +38,6 @@ function* loginUser({ payload: { user, history } }) {
 
 function* onUpdateMe({ payload: { user } }) {
   try {
-    console.log('xxxxxxxxxxxxx')
     yield call(userService.updateOwn(user))
     yield put(updateMeSuccess(user))
   } catch (error) {

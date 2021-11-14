@@ -28,27 +28,20 @@ import ModalProductForm from "./modal-product-form";
 
 const ProductsList = props => {
     const { products, onGetProducts } = props
-    const [productList, setProductList] = useState([])
     const [productToEdit, setProductToEdit] = useState([])
     const [modal, setModal] = useState(false);
     const [showError, setShowError] = useState(false);
     const [isEdit, setIsEdit] = useState(false)
-
     const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
     const [scopedItem, setScopedItem] = useState({})
     const [actionsLoading, setActionsLoading] = useState(false)
     const [openFormModal, setOpenFormModal] = useState(false)
 
-    const { SearchBar } = Search
-
-    const onPageChange = (page, sizePerPage) => {
-        props.history.push(window.location.pathname+'?page='+page)
-    }
 
     const pageOptions = {
         sizePerPage: 50,
-        totalSize: props.totalSize, // replace later with size(products),
-        onPageChange: onPageChange,
+        totalSize: props.totalSize,
+        // onPageChange: onPageChange,
         custom: true,
         page: Math.ceil(props.from/50)
     }
@@ -59,9 +52,6 @@ const ProductsList = props => {
         order: 'desc' // desc or asc
     }];
 
-    const selectRow = {
-        mode: 'checkbox'
-    };
 
     const productListColumns = [
         {
@@ -81,25 +71,12 @@ const ProductsList = props => {
         {
             dataField: "currency_to_deliver.iso_code",
             text: "Currency To Deliver",
+            formatter: (cellContent, row) => (<>{cellContent}{cellContent ? <>&nbsp;</> : ''}<span className={`${row.cash_deliver ? 'font-size-12 badge-soft-primary badge badge-primary badge-pill' : 'danger'}`}>{row.cash_deliver && 'EFE'}</span></>)
         },
         {
-            dataField: "cash_deliver",
-            text: "EFE",
-            formatter: (cellContent) => (<span className={`${cellContent ? 'font-size-12 badge-soft-primary badge badge-primary badge-pill' : 'danger'}`}>{cellContent && 'EFE'}</span>)
+            dataField: "url",
+            text: "URL",
         },
-        // {
-        //     dataField: "status",
-        //     text: "Status",
-        //     formatter: (cellContent, product) => (
-        //         <div className="d-flex gap-3">
-        //             {
-        //                 cellContent === 'ACTIVE' ? <span className='badge badge-soft-success rounded-pill float-end ms-1 font-size-12'>ACTIVE</span> 
-        //                     : cellContent === 'INACTIVE' ? <span className='badge badge-soft-dark rounded-pill float-end ms-1 font-size-12'>INACTIVE</span> 
-        //                     : <span className='badge badge-soft-warning rounded-pill float-end ms-1 font-size-12'>BANNED</span> 
-        //             }
-        //         </div>
-        //     ),
-        // },
         {
             dataField: "menu",
             isDummyField: true,
@@ -121,24 +98,7 @@ const ProductsList = props => {
         }
     }, [onGetProducts, products.from, window.location.search]);
 
-    useEffect(() => {
 
-        onGetProducts(window.location.search);
-        setIsEdit(false)
-    
-    }, [window.location.search]);
-
-    useEffect(() => {
-        setProductList(products);
-        setIsEdit(false)
-    }, [products])
-
-    useEffect(() => {
-        if (!isEmpty(products) && !!isEdit) {
-            setProductList(products)
-            setIsEdit(false)
-        }
-    }, [products])
 
     const toggle = () => {
         setModal(!modal)
@@ -157,8 +117,7 @@ const ProductsList = props => {
 
         setIsEdit(true)
         setOpenFormModal(true)
-
-        toggle()
+        setModal(true)
     }
 
     const openDeleteDialog = (product) => {
@@ -177,8 +136,6 @@ const ProductsList = props => {
 
 
     const handleValidProductSubmit = (e, values) => {
-
-      
         setActionsLoading(true)
         setShowError(true)
         const { onAddNewProduct, onUpdateProduct } = props
@@ -191,7 +148,6 @@ const ProductsList = props => {
                 url: values.url,
             }
             onUpdateProduct(updateProduct)
-            setProductList(updateProduct)
         } else {
             const newProduct = {
                 currency_to_receive: values["currency_to_receive"],
@@ -204,9 +160,6 @@ const ProductsList = props => {
     }
 
     useEffect(() => {
-
-        console.log('/////////')
-        console.log(props.error)
         if(openFormModal){
             if(_.isEmpty(props.error)){
                 setOpenFormModal(false)
@@ -221,7 +174,6 @@ const ProductsList = props => {
                 showNotification({title:'Deleted!', message:'Item is gone', type:'success'})
             }
         }
-        console.log('-----------+++')
         setActionsLoading(false)
     }, [products, props.error])
 
@@ -230,14 +182,7 @@ const ProductsList = props => {
         setIsEdit(false)
         setProductToEdit({})
         setShowError(false)
-        // setProductList('')
-        // setIsEdit(false)
-        // toggle()
     }
-
-  
-
- 
 
     function toggleDeleteModal() {
         setDeleteModalIsOpen(!deleteModalIsOpen)
@@ -324,7 +269,7 @@ const ProductsList = props => {
                                                                         }
                                                                         remote
                                                                         onTableChange={
-                                                                            (e)=>console.log('asdasd')
+                                                                            (e)=>''
                                                                         }
                                                                         bordered={false}
                                                                         striped={false}
@@ -333,13 +278,7 @@ const ProductsList = props => {
                                                                 </div>
                                                             </Col>
                                                         </Row>
-                                                        <Row className="align-items-md-center mt-30">
-                                                            <Col className="pagination pagination-rounded justify-content-end mb-2">
-                                                                <PaginationListStandalone
-                                                                    {...paginationProps}
-                                                                />
-                                                            </Col>
-                                                        </Row>
+                                                       
                                                     </React.Fragment>
                                                 )}
                                             </ToolkitProvider>
