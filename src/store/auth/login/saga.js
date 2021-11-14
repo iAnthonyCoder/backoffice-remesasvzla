@@ -10,6 +10,25 @@ import { apiError, loginSuccess, updateMe, updateMeSuccess } from "./actions"
 import jwt from 'jwt-decode' 
 import { authService, userService } from "services"
 
+const asyncLocalStorage = {
+  setItem: function (key, value) {
+      return Promise.resolve().then(function () {
+          localStorage.setItem(key, value);
+      });
+  },
+  getItem: function (key) {
+      return Promise.resolve().then(function () {
+          return localStorage.getItem(key);
+      });
+  }
+};
+
+
+const redir = async (response, history) => {
+    await asyncLocalStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
+    await asyncLocalStorage.setItem("access_token", JSON.stringify(response.response))
+    history.push("/dashboard")
+}
 
 function* loginUser({ payload: { user, history } }) {
   try {
@@ -21,11 +40,11 @@ function* loginUser({ payload: { user, history } }) {
       if(code){
         throw new Error(data.message || data.errors[0]['message'])
       } else {
-        localStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
-        localStorage.setItem("access_token", JSON.stringify(response.response))
+        
         yield put(loginSuccess(jwt(response.response)))
+        redir(response, history)
       }
-    history.push("/dashboard")
+    
   } catch (error) {
     if(error.message.includes('401')){
       yield put(apiError('Incorrect credentials'))
