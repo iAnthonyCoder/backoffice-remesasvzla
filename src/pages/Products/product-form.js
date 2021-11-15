@@ -2,6 +2,7 @@ import React from 'react'
 import { SingleSelect } from 'components/Common/SingleSelect';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { currencyService } from 'services';
 
 
 
@@ -50,7 +51,7 @@ function ProductForm(props) {
 							onChange={setFieldValue}
 							onBlur={setFieldTouched}
 							error={errors.currency_to_receive}
-							endPoint={getCurrencies}
+							endPoint={currencyService.find}
 							touched={touched.currency_to_receive}
 							name={"currency_to_receive"}
 							title={"Currency To Receive"}
@@ -66,7 +67,7 @@ function ProductForm(props) {
 							onChange={setFieldValue}
 							onBlur={setFieldTouched}
 							error={errors.currency_to_deliver}
-							endPoint={getCurrencies}
+							endPoint={currencyService.find}
 							touched={touched.currency_to_deliver}
 							name={"currency_to_deliver"}
 							title={"Currency To Deliver"}
