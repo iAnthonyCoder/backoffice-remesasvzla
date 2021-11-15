@@ -40,7 +40,8 @@ const Login = props => {
         setActionsLoading(false)
       }
     } catch(err){
-      console.log(err)
+      if(props.error){
+      setActionsLoading(false)}
     } 
   }
 
@@ -158,11 +159,12 @@ const Login = props => {
                         />
                       </div>
 
-                      <div className="form-check">
-                        <input
+                      <div className=" d-flex">
+                        <AvField
                           type="checkbox"
                           className="form-check-input"
                           id="customControlInline"
+                          name='remember'
                         />
                         <label
                           className="form-check-label"
@@ -187,7 +189,7 @@ const Login = props => {
                       </div>
 
                       <div className="mt-4 text-center">
-                        <h5 className="font-size-14 mb-3">Sign in with</h5>
+                        {/* <h5 className="font-size-14 mb-3">Sign in with</h5> */}
 
                         {/* <ul className="list-inline">
                           <li className="list-inline-item">
@@ -246,12 +248,12 @@ const Login = props => {
                         </ul> */}
                       </div>
 
-                      <div className="mt-4 text-center">
+                      {/* <div className="mt-4 text-center">
                         <Link to="/forgot-password" className="text-muted">
                           <i className="mdi mdi-lock me-1" />
                           Forgot your password?
                         </Link>
-                      </div>
+                      </div> */}
                     </AvForm>
                   </div>
                 </CardBody>

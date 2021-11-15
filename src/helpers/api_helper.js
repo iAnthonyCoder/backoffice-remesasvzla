@@ -1,7 +1,7 @@
 import axios from "axios"
 //pass new generated access token here
-const token = localStorage.getItem("access_token") ? 'Bearer '+JSON.parse(localStorage.getItem("access_token")) : ''
 
+const token = localStorage.getItem("access_token") != null ? 'Bearer '+JSON.parse(localStorage.getItem("access_token")) : sessionStorage.getItem("access_token") != null ? 'Bearer '+JSON.parse(sessionStorage.getItem("access_token")) : ''
 //apply base url for axios
 const API_URL = process.env.REACT_APP_DEFAULTAPI
 

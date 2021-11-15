@@ -24,14 +24,26 @@ function EmailEditModal(props) {
             setStatus();
             const response = await userService.updateOwn(fields)
             await localStorage.setItem("authUser", JSON.stringify(jwt(response.token)))
-            await localStorage.setItem("access_token", JSON.stringify(response.token))
-            updateMeSuccess(jwt(response.token))
-            setSubmitting(false);
-            showNotifications({
-                title:'Email updated', 
-                type:'success'
-            })
-            props.toggle()
+            if(localStorage.getItem('remember')==='1'){
+                await localStorage.setItem("access_token", JSON.stringify(response.token))
+                updateMeSuccess(jwt(response.token))
+                setSubmitting(false);
+                showNotifications({
+                    title:'Email updated', 
+                    type:'success'
+                })
+                props.toggle()
+            } else {
+                await sessionStorage.setItem("access_token", JSON.stringify(response.token))
+                updateMeSuccess(jwt(response.token))
+                setSubmitting(false);
+                showNotifications({
+                    title:'Email updated', 
+                    type:'success'
+                })
+                props.toggle()
+            }
+            
         } catch(err) {
             showNotifications({
                 title:err.response.data.message, 

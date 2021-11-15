@@ -23,14 +23,38 @@ const asyncLocalStorage = {
   }
 };
 
+const asyncSessionStorage = {
+  setItem: function (key, value) {
+      return Promise.resolve().then(function () {
+          sessionStorage.setItem(key, value);
+      });
+  },
+  getItem: function (key) {
+      return Promise.resolve().then(function () {
+          return  sessionStorage.getItem(key);
+      });
+  }
+};
 
-const redir = async (response, history) => {
-    await asyncLocalStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
-    await asyncLocalStorage.setItem("access_token", JSON.stringify(response.response))
-    history.push("/dashboard")
+
+const redir = async (response, history, remember) => {
+    if(remember){
+        await asyncLocalStorage.setItem("remember", JSON.stringify(remember))
+        await asyncLocalStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
+        await asyncLocalStorage.setItem("access_token", JSON.stringify(response.response))
+        history.push("/dashboard")
+    } else {
+        await asyncLocalStorage.setItem("remember", JSON.stringify(remember))
+        await asyncLocalStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
+        await asyncSessionStorage.setItem("access_token", JSON.stringify(response.response))
+        await localStorage.removeItem("access_token")
+        history.push("/dashboard")
+    }
+    
 }
 
 function* loginUser({ payload: { user, history } }) {
+
   try {
         const response = yield call(authService.login, {
         email: user.email,
@@ -42,7 +66,7 @@ function* loginUser({ payload: { user, history } }) {
       } else {
         
         yield put(loginSuccess(jwt(response.response)))
-        redir(response, history)
+        redir(response, history, user.remember)
       }
     
   } catch (error) {
