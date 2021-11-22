@@ -10,10 +10,13 @@ const update = (id, params) => put(`refreshes/${id}`, params)
 
 const _delete = (id) => del(`refreshes/${id}`)
 
+const getFromSheet = (params) => get('refreshes/sheet'+params)
+
 export const refreshService = {
     list,
     find,
     create,
     update,
+    getFromSheet,
 	delete: _delete,
 };

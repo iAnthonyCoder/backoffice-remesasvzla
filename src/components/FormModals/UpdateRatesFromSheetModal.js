@@ -14,6 +14,8 @@ import {
   import BootstrapTable from 'react-bootstrap-table-next';
 import Swal from "sweetalert2";
 import showNotifications from "components/Common/Notifications";
+import { refreshService } from "services";
+import queryString from 'query-string'
 
 const Toast = Swal.mixin({
     toast: true,
@@ -43,10 +45,11 @@ const UpdateRatesFromSheetModal = (props) => {
             if(query.month < 10){
                 query.month = '0'+query.month-1
             }
-            let res = await getSheetData(query)
+            let res = await refreshService.getFromSheet('?'+queryString.stringify(query))
             setDataFromSheet(res)
             setActionsLoading(false)
         } catch(er){
+            console.log(er)
             showNotifications({
                 
                 title:er.response.data.message, 
@@ -70,13 +73,12 @@ const UpdateRatesFromSheetModal = (props) => {
                     }
                 })
             }
-            await bulkUpdateProducts(
+            await refreshService.create(
                 payload
-
             )
             setActionsLoading(false)
-            // setDataFromSheet(dataFromSheet.filter(x => x.date!=payload.date))
-            // props.toggle()
+            setDataFromSheet(dataFromSheet.filter(x => x.date!=payload.date))
+            props.toggle()
             // props._getProducts()
             showNotifications({
                 title:'Rates imported', 
