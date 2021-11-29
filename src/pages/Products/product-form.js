@@ -13,7 +13,8 @@ function ProductForm(props) {
 		currency_to_receive: '',
 		currency_to_deliver: '',
         url: '',
-        cash_deliver: false
+        cash_deliver: false,
+        isPublished: false
     });
 
     React.useEffect(() => {
@@ -28,9 +29,10 @@ function ProductForm(props) {
         currency_to_deliver: Yup.object()
             .required('currency_to_receive is required'),
         url: Yup.string()
-            .required('currency_to_receive is required')
+            .required('url is required')
             .max(200, 'The url string length cannot contain more than 200 characters'),
-        cash_deliver: Yup.boolean()
+        cash_deliver: Yup.boolean(),
+        isPublished: Yup.boolean()
     
     });
 
@@ -88,6 +90,14 @@ function ProductForm(props) {
                         <Field type="checkbox" name="cash_deliver" id='cash_deliver' />&nbsp;
                         <label className="form-label ml-2 mb-0" for="cash_deliver"> Cash Deliver (EFE)</label>
                         <ErrorMessage name="cash_deliver" component="div" className="invalid-feedback" />
+                    </div>
+                </div>
+                {console.log(errors)}
+                <div className='col-12 mt-3'>
+                    <div className="form-group d-flex align-items-center">
+                        <Field type="checkbox" name="isPublished" id='isPublished' />&nbsp;
+                        <label className="form-label ml-2 mb-0" for="isPublished"> Published</label>
+                        <ErrorMessage name="isPublished" component="div" className="invalid-feedback" />
                     </div>
                 </div>
                 {/* <div className='col-12 mt-3'>

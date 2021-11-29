@@ -25,6 +25,7 @@ import {
 import _, { isEmpty, size, map } from "lodash"
 import DeleteDialog from '../../components/Common/DeleteDialog'
 import ModalProductForm from "./modal-product-form";
+import { productService } from "services";
 
 const ProductsList = props => {
     const { products, onGetProducts } = props
@@ -53,6 +54,25 @@ const ProductsList = props => {
     }];
 
 
+    const changeStatus = async (_id, params) => {
+        try {
+            console.log(params)
+            const updateProduct = {
+                currency_to_deliver: params.currency_to_deliver,
+                currency_to_receive: params.currency_to_receive,
+                isPublished: !params.isPublished,
+                _id: params._id,
+                url: params.url,
+                cash_deliver: params.cash_deliver
+            }
+            console.log(updateProduct)
+            props.onUpdateProduct(updateProduct)
+        } catch (er) {
+            console.log(er)
+        }
+    }
+
+
     const productListColumns = [
         {
             text: "id",
@@ -76,6 +96,43 @@ const ProductsList = props => {
         {
             dataField: "url",
             text: "URL",
+        },
+        {
+            dataField: "isPublished",
+            text: "Published",
+            formatter: (cellContent, row) => (
+                <>
+                    <div
+                          className="form-check form-switch"
+                          
+                        >
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id="customSwitchsizesm"
+                            checked={row.isPublished}
+                            // onClick={() => {
+                            //   this.setState({
+                            //     toggleSwitchSize: !this.state
+                            //       .toggleSwitchSize,
+                            //   })
+                            // }}
+                            onClick={e => {
+                              changeStatus(row._id, {...row})
+                            }}
+                          />
+                          <label
+                            className={`form-check-label ${row.isPublished ? 'text-primary' : 'text-danger'}`}
+                            htmlFor="customSwitchsizesm"
+                          >
+                              {
+                                  row.isPublished ? 'Published' : 'Unpublished'
+                              }
+                          
+                          </label>
+                    </div>
+                </>
+            )
         },
         {
             dataField: "menu",
@@ -113,6 +170,7 @@ const ProductsList = props => {
             currency_to_deliver: product.currency_to_deliver,
             cash_deliver: product.cash_deliver,
             url: product.url,
+            isPublished: product.isPublished,
         })
 
         setIsEdit(true)
@@ -146,6 +204,7 @@ const ProductsList = props => {
                 currency_to_deliver: values.currency_to_deliver,
                 cash_deliver: values.cash_deliver,
                 url: values.url,
+                isPublished: values.isPublished,
             }
             onUpdateProduct(updateProduct)
         } else {
@@ -153,6 +212,7 @@ const ProductsList = props => {
                 currency_to_receive: values["currency_to_receive"],
                 currency_to_deliver: values["currency_to_deliver"],
                 cash_deliver: values["cash_deliver"],
+                isPublished: values["isPublished"],
                 url: values.url,
             }
             onAddNewProduct(newProduct)

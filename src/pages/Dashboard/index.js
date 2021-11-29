@@ -41,12 +41,12 @@ const Dashboard = props => {
     
         try {
             setLoading(true)
-            const products = await productService.list()
-            let _columns = [...products.totalData.map((x, i) => {
+            let products = await productService.list()
+            let _columns = [...products.totalData.sort((a, b) => a.currency_to_receive.iso_code.toLowerCase() > b.currency_to_receive.iso_code.toLowerCase() ? 1 : -1).map((x, i) => {
                 return {
                     key:i,
                     dataField:`${x.currency_to_receive.iso_code}/${x.currency_to_deliver.iso_code}${x.cash_deliver ? ' (EFE)' : ''}`,
-                    text:`${x.currency_to_receive.iso_code}/${x.currency_to_deliver.iso_code}${x.cash_deliver ? ' (EFE)' : ''}`,
+                    text:<span><i className={`mdi mdi-circle ${x.isPublished ? 'text-primary' : 'text-danger'} me-1`}/>{" "}{`${x.currency_to_receive.iso_code}/${x.currency_to_deliver.iso_code}${x.cash_deliver ? ' (EFE)' : ''}`}</span>,
                     sort:false,
                     _id: x._id
                 }

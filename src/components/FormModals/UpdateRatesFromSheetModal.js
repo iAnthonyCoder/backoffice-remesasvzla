@@ -73,17 +73,27 @@ const UpdateRatesFromSheetModal = (props) => {
                     }
                 })
             }
-            await refreshService.create(
+            const response = await refreshService.create(
                 payload
             )
-            setActionsLoading(false)
-            setDataFromSheet(dataFromSheet.filter(x => x.date!=payload.date))
-            props.toggle()
-            // props._getProducts()
-            showNotifications({
-                title:'Rates imported', 
-                type:'success'
-            })
+            if(response.ok){
+                setActionsLoading(false)
+                setDataFromSheet(dataFromSheet.filter(x => x.date!=payload.date))
+                props.toggle()
+                // props._getProducts()
+                if(response.updated){
+                    showNotifications({
+                        title:'Rates updated', 
+                        type:'success'
+                    })
+                } else {
+                    showNotifications({
+                        title:'Rates imported', 
+                        type:'success'
+                    })
+                }
+            }
+            
         } catch(er) {
             setActionsLoading(false)
             showNotifications({

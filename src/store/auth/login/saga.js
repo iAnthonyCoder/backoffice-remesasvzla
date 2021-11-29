@@ -39,16 +39,17 @@ const asyncSessionStorage = {
 
 const redir = async (response, history, remember) => {
     if(remember){
-        await asyncLocalStorage.setItem("remember", JSON.stringify(remember))
-        await asyncLocalStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
-        await asyncLocalStorage.setItem("access_token", JSON.stringify(response.response))
-        history.push("/dashboard")
+        localStorage.setItem("remember", JSON.stringify(remember))
+        localStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
+        localStorage.setItem("access_token", JSON.stringify(response.response))
+        
+        
     } else {
-        await asyncLocalStorage.setItem("remember", JSON.stringify(remember))
-        await asyncLocalStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
-        await asyncSessionStorage.setItem("access_token", JSON.stringify(response.response))
-        await localStorage.removeItem("access_token")
-        history.push("/dashboard")
+        localStorage.setItem("remember", JSON.stringify(remember))
+        localStorage.setItem("authUser", JSON.stringify(jwt(response.response)))
+        sessionStorage.setItem("access_token", JSON.stringify(response.response))
+        localStorage.removeItem("access_token")
+       
     }
     
 }
@@ -67,6 +68,9 @@ function* loginUser({ payload: { user, history } }) {
         
         yield put(loginSuccess(jwt(response.response)))
         redir(response, history, user.remember)
+        setTimeout(() => {
+          history.push("/dashboard")
+        }, 1000);
       }
     
   } catch (error) {
@@ -97,6 +101,7 @@ function* logoutUser({ payload: { history } }) {
   try {
     localStorage.removeItem("authUser")
     localStorage.removeItem("access_token")
+    sessionStorage.removeItem("access_token")
     history.push("/login")
   } catch (error) {
     yield put(apiError(error))
