@@ -29,7 +29,6 @@ function ProductForm(props) {
         currency_to_deliver: Yup.object()
             .required('currency_to_receive is required'),
         url: Yup.string()
-            .required('url is required')
             .max(200, 'The url string length cannot contain more than 200 characters'),
         cash_deliver: Yup.boolean(),
         isPublished: Yup.boolean()
@@ -79,6 +78,7 @@ function ProductForm(props) {
                     </div>
                 </div>
                 <div className='col-12 mt-3'>
+                    {console.log(errors)}
                     <div className="form-group">
                         <label className="form-label ml-2" for="url"> Url</label>
                         <Field type="text" name="url" placeholder='Url' className='form-control' />

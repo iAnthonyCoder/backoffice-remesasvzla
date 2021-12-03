@@ -63,7 +63,7 @@ const Dashboard = props => {
             let queryS = {
               size: 50,
               sort_field: 'date',
-              sort_order: 'asc',
+              sort_order: 'desc',
               filter_field: ['date', 'date'],
               filter_type: ['gte', 'lte'],
               filter_value: [startDate, endDate],

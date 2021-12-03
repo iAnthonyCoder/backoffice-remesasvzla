@@ -20,6 +20,14 @@ import { productService } from "services"
 function* fetchProducts({payload: query}) {
     try {
         const response = yield call(productService.list, query)
+        if(response.totalData.length > 0){
+            response.totalData = response.totalData.sort(function(a, b){
+                if(a.currency_to_receive.iso_code < b.currency_to_receive.iso_code) { return -1; }
+                if(a.currency_to_receive.iso_code > b.currency_to_receive.iso_code) { return 1; }
+                return 0;
+            })
+        }
+        console.log(response)
         yield put(getProductsSuccess(response))
     } catch (error) {
         yield put(getProductsFail(error))
