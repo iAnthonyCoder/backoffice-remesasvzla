@@ -39,12 +39,18 @@ const UpdateRatesFromSheetModal = (props) => {
     const _getSheetData = async () => {
         try {
             let query = Object.assign({}, formData)
+
+            query.day = parseInt(query.day, 10)
+            query.month = parseInt(query.month, 10)
+            query.year = parseInt(query.year, 10)
+         
             if(query.day < 10){
                 query.day = '0'+query.day
             }
             if(query.month < 10){
-                query.month = '0'+query.month-1
+                query.month = '0'+query.month
             }
+            console.log(query)
             let res = await refreshService.getFromSheet('?'+queryString.stringify(query))
             setDataFromSheet(res)
             setActionsLoading(false)
@@ -111,7 +117,7 @@ const UpdateRatesFromSheetModal = (props) => {
 
     const [ formData, setFormData ] = React.useState({
         day: moment().format("D"),
-        month: moment().format("MM"),
+        month: moment().format("M"),
         year: moment().format("YYYY"),
     })
 
@@ -193,12 +199,13 @@ const UpdateRatesFromSheetModal = (props) => {
                     ) : (
                         <>
                              <div className='row'>
+                                 {console.log(formData)}
                                 <div className='col-4'>
                                     <div className="form-group">
                                         <label for='day' className="form-label">Day</label>
                                         <select name='day' className='form-control' onChange={(e)=>setFormData({...formData, day:e.target.value})} value={parseInt(formData.day, 10)}>
                                             {
-                                                Array.from({length: moment().daysInMonth()}, (v, k) => k + 1).map((x, i) => <option>
+                                                Array.from({length: moment().daysInMonth()}, (v, k) => k + 1).map((x, i) => <option value={x}>
                                                     {i+1}
                                                 </option>)
                                             }
@@ -209,8 +216,15 @@ const UpdateRatesFromSheetModal = (props) => {
                                 <div className='col-4'>
                                     <div className="form-group">
                                         <label for='month' className="form-label">Month</label>
+                                        <select name='month' className='form-control' onChange={(e)=>setFormData({...formData, month:e.target.value})} value={parseInt(formData.month, 10)}>
+                                            {
+                                                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(x => <option value={x}>
+                                                    {x}
+                                                </option>)
+                                            }
+                                        </select>
                                         
-                                        <input type='number' name='month' className='form-control' readOnly={true} value={formData.month}></input>
+                                        {/* <input type='number' name='month' className='form-control' readOnly={true} value={formData.month}></input> */}
                                         
                                     </div>
                                     <br/>
@@ -218,7 +232,13 @@ const UpdateRatesFromSheetModal = (props) => {
                                 <div for='year' className='col-4'>
                                     <div className="form-group">
                                         <label for='year' className="form-label">Year</label>
-                                        <input type='number' name='year' className='form-control' readOnly={true}  value={formData.year}></input>
+                                        <select name='year' className='form-control' onChange={(e)=>setFormData({...formData, year:e.target.value})} value={parseInt(formData.year, 10)}>
+                                            {
+                                                [parseInt(formData.year, 10)-1, parseInt(formData.year, 10), parseInt(formData.year, 10)+1].map(x => <option value={x}>
+                                                    {x}
+                                                </option>)
+                                            }
+                                        </select>
                                     </div>
                                     <br/>
                                 </div>
