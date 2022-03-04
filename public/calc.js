@@ -12,6 +12,10 @@ const fetchRates = async () => {
     return response;  
 }
 
+function removeFromText(text, strToBeRemoved) {
+    return text.split(strToBeRemoved).join('');
+}
+
 const convertNow = (val, inverse) => {
     document.getElementById('hlink').href='#'
     globalInverse = inverse
@@ -54,6 +58,7 @@ const convertNow = (val, inverse) => {
         console.log(selectedRate)
         console.log(ccyFromId)
         console.log(ccyToId)
+        console.log(removeFromText(removeFromText(document.getElementById('fromAmount').value, ','), '.'))
     }
 }
 
