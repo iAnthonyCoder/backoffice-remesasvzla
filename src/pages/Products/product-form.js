@@ -31,6 +31,8 @@ function ProductForm(props) {
         url: Yup.string()
             .max(200, 'The url string length cannot contain more than 200 characters'),
         cash_deliver: Yup.boolean(),
+        min: Yup.number().required('minimum is required'),
+        max: Yup.number().required('maximum is required'),
         isPublished: Yup.boolean()
     
     });
@@ -63,6 +65,20 @@ function ProductForm(props) {
                 </div>
                 <div className='col-12 mt-3'>
                     <div className="form-group">
+                        <label className="form-label ml-2" for="min"> Minimum</label>
+                        <Field type="number" name="min" placeholder='Minimum' className='form-control' />
+                        <ErrorMessage name="min" component="div" className="invalid-feedback" />
+                    </div>
+                </div>
+                <div className='col-12 mt-3'>
+                    <div className="form-group">
+                        <label className="form-label ml-2" for="max"> Maximum</label>
+                        <Field type="number" name="max" placeholder='Maximum' className='form-control' />
+                        <ErrorMessage name="max" component="div" className="invalid-feedback" />
+                    </div>
+                </div>
+                <div className='col-12 mt-3'>
+                    <div className="form-group">
 						<SingleSelect
 							value={values.currency_to_deliver}
 							onChange={setFieldValue}
@@ -78,7 +94,6 @@ function ProductForm(props) {
                     </div>
                 </div>
                 <div className='col-12 mt-3'>
-                    {console.log(errors)}
                     <div className="form-group">
                         <label className="form-label ml-2" for="url"> Url</label>
                         <Field type="text" name="url" placeholder='Url' className='form-control' />
@@ -92,7 +107,6 @@ function ProductForm(props) {
                         <ErrorMessage name="cash_deliver" component="div" className="invalid-feedback" />
                     </div>
                 </div>
-                {console.log(errors)}
                 <div className='col-12 mt-3'>
                     <div className="form-group d-flex align-items-center">
                         <Field type="checkbox" name="isPublished" id='isPublished' />&nbsp;

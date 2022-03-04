@@ -50,8 +50,16 @@ const UpdateRatesFromSheetModal = (props) => {
             if(query.month < 10){
                 query.month = '0'+query.month
             }
-            console.log(query)
             let res = await refreshService.getFromSheet('?'+queryString.stringify(query))
+            res = res.map(x => {
+                let rat = x.rates.sort(function(a, b){
+                    if(a.pair < b.pair) { return -1; }
+                    if(a.pair > b.pair) { return 1; }
+                    return 0;
+                })
+                x.rates = rat
+                return x
+            })
             setDataFromSheet(res)
             setActionsLoading(false)
         } catch(er){

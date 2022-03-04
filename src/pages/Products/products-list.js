@@ -63,7 +63,9 @@ const ProductsList = props => {
                 isPublished: !params.isPublished,
                 _id: params._id,
                 url: params.url,
-                cash_deliver: params.cash_deliver
+                cash_deliver: params.cash_deliver,
+                min: params.min,
+                max: params.max
             }
             console.log(updateProduct)
             props.onUpdateProduct(updateProduct)
@@ -87,6 +89,14 @@ const ProductsList = props => {
         {
             dataField: "currency_to_receive.iso_code",
             text: "Currency To Receive",
+        },
+        {
+            dataField: "min",
+            text: "Minimum",
+        },
+        {
+            dataField: "max",
+            text: "Maximum",
         },
         {
             dataField: "currency_to_deliver.iso_code",
@@ -169,6 +179,8 @@ const ProductsList = props => {
             currency_to_receive: product.currency_to_receive,
             currency_to_deliver: product.currency_to_deliver,
             cash_deliver: product.cash_deliver,
+            min: product.min,
+            max: product.max,
             url: product.url,
             isPublished: product.isPublished,
         })
@@ -203,6 +215,8 @@ const ProductsList = props => {
                 currency_to_receive: values.currency_to_receive,
                 currency_to_deliver: values.currency_to_deliver,
                 cash_deliver: values.cash_deliver,
+                min: values.min,
+                max: values.max,
                 url: values.url,
                 isPublished: values.isPublished,
             }
@@ -212,6 +226,8 @@ const ProductsList = props => {
                 currency_to_receive: values["currency_to_receive"],
                 currency_to_deliver: values["currency_to_deliver"],
                 cash_deliver: values["cash_deliver"],
+                min: values["min"],
+                max: values["max"],
                 isPublished: values["isPublished"],
                 url: values.url,
             }
