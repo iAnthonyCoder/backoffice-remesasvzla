@@ -55,10 +55,20 @@ const convertNow = (val, inverse) => {
 
     if(selectedRate){
         document.getElementById('montoTasa').innerHTML = `Tasa ${selectedRate.currency_to_receive.iso_code} $ = ${selectedRate.rate} ${selectedRate.currency_to_deliver.iso_code}`
-        console.log(selectedRate)
-        console.log(ccyFromId)
-        console.log(ccyToId)
-        console.log(removeFromText(removeFromText(document.getElementById('fromAmount').value, ','), '.'))
+        let amt = parseInt(removeFromText(removeFromText(document.getElementById('fromAmount').value, ','), '.'), 10)
+        if(selectedRate.min && selectedRate.max){
+            if(amt < selectedRate.min){
+                document.getElementById('errorMonto').innerHTML = `El monto minimo permitido es ${selectedRate.min}${selectedRate.currency_to_receive.iso_code}`
+                document.getElementById('hlink').href='#'
+            } else if(amt > selectedRate.max) {
+                document.getElementById('errorMonto').innerHTML = `El monto maximo permitido es ${selectedRate.max}${selectedRate.currency_to_receive.iso_code}`
+                document.getElementById('hlink').href='#'
+            } else {
+                document.getElementById('errorMonto').innerHTML = ``
+            }
+        }   
+        
+        
     }
 }
 
@@ -120,6 +130,7 @@ const loadRates = () => {
             document.getElementById('toAmount').value = ''
             document.getElementById('fromAmount').value = ''
             document.getElementById('montoTasa').innerHTML = ''
+            document.getElementById('errorMonto').innerHTML = ``
             convertNow()
         }
     });
