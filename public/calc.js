@@ -52,6 +52,8 @@ const convertNow = (val, inverse) => {
     if(selectedRate){
         document.getElementById('montoTasa').innerHTML = `Tasa ${selectedRate.currency_to_receive.iso_code} $ = ${selectedRate.rate} ${selectedRate.currency_to_deliver.iso_code}`
         console.log(selectedRate)
+        console.log(ccyFromId)
+        console.log(ccyToId)
     }
 }
 
