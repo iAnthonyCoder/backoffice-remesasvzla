@@ -17,7 +17,7 @@ function removeFromText(text, strToBeRemoved) {
 }
 
 const convertToLocale = (e) => {
-    val = e.replaceAll(',', '').toFixed(2).toString();
+    val = e.toFixed(2).toString();
         
     if(val != "") {
       valArr = val.split('.');
