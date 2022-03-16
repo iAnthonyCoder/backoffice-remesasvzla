@@ -16,6 +16,18 @@ function removeFromText(text, strToBeRemoved) {
     return text.split(strToBeRemoved).join('');
 }
 
+const convertToLocale = (e) => {
+    val = e.replaceAll(',', '').toFixed(2).toString();
+        
+    if(val != "") {
+      valArr = val.split('.');
+      valArr[0] = (parseInt(valArr[0],10)).toLocaleString();
+      val = valArr.join('.');
+    }
+
+    return val
+}
+
 const convertNow = (val, inverse) => {
     document.getElementById('hlink').href='#'
     globalInverse = inverse
@@ -58,10 +70,10 @@ const convertNow = (val, inverse) => {
         let amt = parseInt(removeFromText(removeFromText(document.getElementById('fromAmount').value, ','), '.'), 10)
         if(selectedRate.min && selectedRate.max){
             if(amt < selectedRate.min){
-                document.getElementById('errorMonto').innerHTML = `El monto minimo permitido es ${selectedRate.min}${selectedRate.currency_to_receive.iso_code}`
+                document.getElementById('errorMonto').innerHTML = `El monto minimo permitido es ${convertToLocale(selectedRate.min)} ${selectedRate.currency_to_receive.iso_code}`
                 document.getElementById('hlink').href='#'
             } else if(amt > selectedRate.max) {
-                document.getElementById('errorMonto').innerHTML = `El monto maximo permitido es ${selectedRate.max}${selectedRate.currency_to_receive.iso_code}`
+                document.getElementById('errorMonto').innerHTML = `El monto maximo permitido es ${convertToLocale(selectedRate.max)} ${selectedRate.currency_to_receive.iso_code}`
                 document.getElementById('hlink').href='#'
             } else {
                 document.getElementById('errorMonto').innerHTML = ``
