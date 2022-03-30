@@ -4,7 +4,7 @@ var amount
 var ccyToId
 var globalInverse = false
 var selectedRate
-
+// <script type="text/javascript" src="https://backoffice-remesasvzla.vercel.app/calc.js"></script>
 const url = 'https://api-remesasvzla.herokuapp.com/api/v1/refreshes/lastest'
 const fetchRates = async () => {
     var respuesta = await fetch(url)

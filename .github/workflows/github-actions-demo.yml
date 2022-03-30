@@ -1,0 +1,8 @@
+name: Fix up git URLs
+on: push
+jobs:
+  print-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fix up git URLs
+        run: echo -e '[url "https://github.com/"]\n  insteadOf = "git://github.com/"' >> ~/.gitconfig
