@@ -67,7 +67,9 @@ const convertNow = (val, inverse) => {
 
     if(selectedRate){
         document.getElementById('montoTasa').innerHTML = `Tasa ${selectedRate.currency_to_receive.iso_code} $ = ${selectedRate.rate} ${selectedRate.currency_to_deliver.iso_code}`
-        let amt = parseInt(removeFromText(removeFromText(document.getElementById('fromAmount').value, ','), '.'), 10)
+        let amt = document.getElementById('fromAmount').value.toString()
+        amt = parseFloat(removeFromText(amt, ','))
+        console.log(amt)
         if(selectedRate.min && selectedRate.max){
             if(amt < selectedRate.min){
                 document.getElementById('errorMonto').innerHTML = `El monto minimo permitido es ${convertToLocale(selectedRate.min)} ${selectedRate.currency_to_receive.iso_code}`
@@ -79,8 +81,6 @@ const convertNow = (val, inverse) => {
                 document.getElementById('errorMonto').innerHTML = ``
             }
         }   
-        
-        
     }
 }
 

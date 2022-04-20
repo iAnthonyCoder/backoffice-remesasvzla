@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta name="viewport" content="width=device-width"/>
+            <meta charset="utf-8">
+            <style type="text/css">
+                body{
+                    background-color: black;
+                }
+                .principal {
+                    width: 100%;
+                    background: #1883ba;
+                    justify-content: center;
+                    align-items: center;
+                    display: flex;
+                    font-family: montserrat;
+                    font-size: 17px;
+                    color: #ffff;
+                }
+                #calculator{
+                    visibility: hidden
+                }
+                .padre{
+                    width: 40%;
+                }
+                #errors{
+                    display: none
+                }
+                #errorMonto{
+                            color: #ffffff;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+    font-size: 24px;
+                        
+                }
+                .padre-botom{
+                    width: 20%;
+                }
+                .columna1 {
+                    float: left;
+                    text-align: justify;
+                }
+                .columna1   select {
+                    width: 100%;
+                    padding-left: 5px;
+                    padding-bottom: 0px;
+                    text-align: justify;
+                    font-size: 16px;
+                    height: 1.8em;
+                    min-height: auto;
+                    border: 1px solid #ddd;
+                    border-radius: 6px;
+                    background-color: white;
+                    color: #4e4e4e;
+                    cursor: pointer;
+                }
+                .columna2 {
+                    float: left;
+                    width: 65%;
+                    text-align: justify;
+                    margin-left: 1px;
+                    font-size: 16px;
+                    /* padding: 35px; */
+                    padding-top: 35px;
+                    padding-bottom: 35px;
+                    padding-right: 38px;
+                    margin-left: -30px;
+                    margin-right: -46px;
+                }
+                .columna2  input {
+                    line-height: normal;
+                    color: #3c4456;
+                    border-radius: 6px;
+                    margin-top: 18px;
+                    width: 100%;
+                    border: white;
+                    padding: 5px 5px;
+                    cursor: pointer;
+                }
+                .columna2 p {background-color: #fff;
+                    color: #4e4e4e;
+                    /* border: solid; */
+                    border-radius: 6px;
+                    margin: 17px 0px 0px 0px;
+                    padding: 0px 10px 0px;
+                 }
+             
+                .columna3 {
+                    float: left;
+                    width: 100%;
+                    text-align: justify;
+                    margin-left: 60px;
+                }
+                .tipoDeCambio {
+                    width: 100%;
+                    background: #1883ba;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: montserrat;
+                    font-size: 18px;
+                    color: #ffff;
+                }
+                .boton {
+                    text-decoration:none;
+                    font-weight: 500;
+                    font-size: 16px;
+                    color:#1883ba;
+                    padding-top:10px;
+                    padding-bottom:10px;
+                    padding-left:10px;
+                    padding-right:10px;
+                    background-color:#ffff;
+                    border-radius:25px;
+                }
+                .boton:hover {
+                    background: #1883ba;
+                    color: #fff;
+                    border-width: 2px;
+                    border-style: solid;
+                    border-color: #fff;
+                }
+                input[type=number]::-webkit-inner-spin-button,
+                input[type=number]::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+
+                /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+
+                @media screen and (max-width: 600px) {
+                    .principal{
+                        display: inline-block;
+                    }
+                    .padre{
+                    width: 100%;
+                    }
+
+                    .padre-botom{
+                    width: 100%;
+                    }
+                      .columna1 {
+                        width: 50%;
+                        margin-top: 0;
+                        padding: 10px;
+                      margin: 0;
+                      }
+                      .columna2{
+                      width: 50%;
+                      margin-top: 0;
+                      padding: 10px;
+                      margin: 0;
+                      }
+                      .columna2  input{
+                      width: 100%;
+                      }
+                      .columna3{
+                      width: 100%;
+                      text-align: center;
+                      padding: 15px 0px 0px 0px;
+                      margin: 0;
+                      }
+                }
+                @media (min-width: 768px) {
+                    .columna3{
+                        width: 100%;
+                    }
+                    .padre-botom{
+                        width: 15%;
+                        padding-top: 39px;
+                    }
+                    .columna1 {
+                        width: 50%;
+                        margin-top: 0;
+                        padding: 10px;
+                        margin: 0;
+                    }
+                    .columna2{
+                        width: 50%;
+                        margin-top: 0;
+                        padding: 10px;
+                        margin: 0;
+                    }
+                    .columna2  input{
+                        width: 100%;
+                    }
+                    .columna3{
+                        width: 100%;
+                        text-align: center;
+                        padding: 0px 0px 0px 0px;
+                        margin: 0;
+                    }
+                }
+            </style>
+
+
+            <title>Conversor de Divisas</title>
+        </head>
+
+
+        <body>
+            <div class="principal" id='calculator'>
+                <div class="padre">
+                    <div class="columna1">
+                        <span>Moneda origen</span>
+                        <br>
+                        <select id="fromCcy"></select>
+                    </div>
+                    <div class="columna2">
+                        <span>Divisa a enviar</span>
+                        <br>
+                        <input type="text" id="fromAmount"  value="" placeholder="Escriba el monto">
+                    </div>
+                </div>
+                <div class="padre">
+                    <div class="columna1">
+                        <span>Moneda destino</span>
+                        <br>
+                        <select id="toCcy"></select>
+                    </div>
+                    <div class="columna2">
+                        <span>Divisa a recibir</span>
+                        <br>
+                        <input type="text" id="toAmount" value="">
+                    </div>
+                </div>
+                <div class="padre-botom">
+                    <div class="columna3">
+                        <a id="hlink" class="boton" href="#">
+                            Mándalo
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="tipoDeCambio">
+                <p id="montoTasa" class="tipoTasa"> </p>
+            </div>
+            <div id="">
+                <p id="errorMonto"></p>
+            </div>
+            <script type="text/javascript"
+            src='http://localhost:3000/calc.js'
+            ></script>
+        </body>
+    </html>
